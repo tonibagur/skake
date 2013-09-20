@@ -1,0 +1,229 @@
+<Lapiz>:
+    orientation: 'horizontal'
+    size:self.size
+    Button:
+        background_normal:'drawable/lapiz.png' if root.displayed_text == '' else 'drawable/lapiz_ambar.png'
+        background_down:'drawable/lapiz_ambar.png' if root.displayed_text == '' else 'drawable/lapiz.png'
+        size_hint_x: None
+        size_hint_y: None
+        size: 60,60 
+        border: (0,0,0,0)
+        on_press: root.press_lapiz()
+    Label:
+        text_size:(self.size[0],None)
+        size_hint_x:0.6 
+        size_hint_y: None
+        size: 0,60 
+        text: root.title
+    Label:
+        text_size:(self.size[0],None)
+        size_hint_y: None
+        size: 0,60 
+        text: root.displayed_text if root.display_text else ''
+                  
+<Dedo>:
+    orientation: 'horizontal'
+    size:self.size
+    boto:boto
+    Button:
+        id:boto
+        background_normal:'drawable/dedo.png' if root.displayed_text == '' else 'drawable/dedo_ambar.png'
+        background_down:'drawable/dedo_ambar.png' if root.displayed_text == '' else 'drawable/dedo.png'
+        size_hint_x: None
+        size_hint_y: None
+        size: 60,60
+        border: (0,0,0,0)
+        on_press: root.press_dedo()
+    Label:
+        text_size:(self.size[0],None)
+        size_hint_x:0.6 
+        text:root.title
+        size_hint_y: None
+        size: 0,60 
+    Label:
+        text_size:(self.size[0],None)
+        text:root.displayed_text
+        size_hint_y: None
+        size: 0,60 
+
+
+    
+<LapizForm>:
+    orientation:'vertical' 
+    height: 100
+    TextInput:
+        multiline: False
+        height:60
+        size_hint_y:None
+        text: root.data['texto'] if 'texto' in root.data and root.data['texto'] else ''
+        focus: True
+        on_text:root.value_changed('texto',self.text)
+        
+<DateField>:
+    orientation: 'horizontal'
+    size:self.size
+    Button:
+        background_normal:'drawable/dedo.png' if root.displayed_text == '' else 'drawable/dedo_ambar.png'
+        background_down:'drawable/dedo_ambar.png' if root.displayed_text == '' else 'drawable/dedo.png'
+        size_hint_x: None
+        size_hint_y: None
+        size: 60,60
+        border: (0,0,0,0)
+        on_press: root.press_date()
+    Label:
+        text_size:(self.size[0],None)
+        size_hint_x:0.6 
+        text:root.title
+        size_hint_y: None
+        size: 0,60 
+    Label:
+        text_size:(self.size[0],None)
+        text:root.displayed_text
+        size_hint_y: None
+        size: 0,60 
+        
+<CheckField>:
+    orientation: 'horizontal'
+    Label:
+        text: root.title
+    CheckBox:
+        active: False
+        on_active:root.press_check(self.active)
+        
+<FrmNumVal>:
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Valor anterior:'
+        Label:
+            text: root.data['val_anterior'] if 'val_actual' in root.data else ''
+        Label:
+            size_hint_x: 0.2
+    BoxLayout:
+        orientation: 'horizontal'
+        Label:
+            text: 'Valor actual:'
+        TextInput:           
+            multiline: False
+            height:50
+            size_hint_y:None  
+            text: root.data['val_actual'] if 'val_actual' in root.data and root.data['val_actual'] else ''
+            focus: True
+            on_text:root.value_changed('val_actual',self.text)
+        Label:
+            size_hint_x: 0.2
+    Label:
+        size_hint_y: 0.3
+    
+<FrmEdit>:
+    orientation: 'vertical'
+    dedo_text:dedo_text
+    #Label:
+    #    text: str(root.data)
+    Lapiz:
+        form:root
+        title: 'Texto'
+        field_name: 'texto'
+        controller:root.controller
+        displayed_text: root.data['texto'] if 'texto' in root.data and root.data['texto'] else ''
+    Lapiz:
+        form:root
+        title: 'Ubicación/Parámetro'
+        field_name: 'ubic_preg'
+        controller:root.controller
+        displayed_text: root.data['ubic_preg'] if 'ubic_preg' in root.data and root.data['ubic_preg'] else ''
+    BoxLayout:
+        size_hint_x: 1
+        orientation: 'horizontal'
+        Dedo:
+            id: dedo_text
+            form:root
+            title: 'Tipo'
+            field_name: 'tipo'
+            controller:root.controller
+            displayed_text: root.data['tipo'][1] if 'tipo' in root.data and root.data['tipo'] else ''
+        HideWidget:
+            visible: 'tipo' in root.data and root.data['tipo'][0]=='num' 
+            Lapiz:
+                form:root
+                title: 'Cotas'
+                field_name: 'cotas'
+                controller: root.controller
+                displayed_text: root.data['cotas'] if 'cotas' in root.data and root.data['cotas'] else ''
+    Dedo:
+        form:root
+        title: '¡Requiere herramienta?'
+        field_name: 'herramienta_calib'
+        controller:root.controller
+        displayed_text: root.data['herramienta_calib'][1] if 'herramienta_calib' in root.data and root.data['herramienta_calib'] else ''
+    BoxLayout:
+        size_hint_x: 1
+        orientation: 'horizontal'
+        HideWidget:
+            visible: 'tipo' in root.data and root.data['tipo'][0]!='dtr' 
+            Dedo:
+                form:root
+                title: '¡Es obligatoria?'
+                field_name: 'obligatoria'
+                controller:root.controller
+                displayed_text: root.data['obligatoria'][1] if 'obligatoria' in root.data and root.data['obligatoria'] else ''
+        HideWidget:
+            visible: 'tipo' in root.data and root.data['tipo'][0]=='num' 
+            Dedo:
+                form:root
+                title: '¡Medida anterior acota respuesta?'
+                field_name: 'acota'
+                controller: root.controller
+                displayed_text: root.data['acota'][1] if 'acota' in root.data and root.data['acota'] else ''
+    HideWidget:
+        visible: 'tipo' in root.data and root.data['tipo'][0]=='dtr' 
+        BoxLayout:
+            orientation: 'horizontal'
+            DedoSearch:
+                popup_ctl:root.popup_ctl
+                field_name: 'dtr'
+                title: _('DTR')     
+                form:root
+                controller:root.controller.controller
+                controller_provider:root.controller_dtr
+                field_search_id:'id'
+                field_search_name:'name'
+                displayed_text: root.data['dtr'][1] if 'dtr' in root.data and root.data['dtr'] else ''
+            Dedo:
+                form:root
+                title: 'Coche'
+                field_name: 'coche_docu'
+                controller:root.controller
+                displayed_text: root.data['coche_docu'][1] if 'coche_docu' in root.data and root.data['coche_docu'] else ''
+    HideWidget:
+        visible: 'tipo' in root.data and root.data['tipo'][0]=='dtr' 
+        Dedo:
+            form:root
+            title: '¡Se asignara a operario?'
+            field_name: 'asignar_op'
+            controller:root.controller
+            displayed_text: root.data['asignar_op'][0] if 'asignar_op' in root.data and root.data['asignar_op'] else ''
+ 
+<LayoutState>
+    imagen: root.imagen
+    canvas.before:
+        Color:
+            rgb: (0.2,0.2,0.2,1)
+        Rectangle:
+            pos:self.pos
+            size:self.size
+    AnchorLayout:
+        anchor_x:'center'
+        anchor_y:'center'
+        Button:
+            text:''
+            halign: 'center'
+            valign: 'top'
+            background_normal:root.imagen
+            background_down:root.imagen
+            size: (40,40)
+            size_hint: (None,None)
+
+<DedoActuacion>:
+        

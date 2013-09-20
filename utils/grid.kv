@@ -1,0 +1,81 @@
+
+<DataGridHeader>:
+    rows: 1
+    padding: 2
+    spacing:2
+
+
+
+<TextRectangle>:
+    orientation:'horizontal'
+    label:label
+    canvas.before:
+        Color:
+            rgba: root.rect_color
+        Rectangle:
+            # binding properties is done implicitly and instructions aren't
+            # piled up while doing that.
+            pos: self.pos
+            # self here refers to Field as `self` is supposed to refer to the
+            # Widget not the drawing instruction
+            size: self.size
+    Label:
+        width:10
+        size_hint_x:None
+    Label:
+        id:label
+        font_size:get_format('font12')
+        text:root.format_text(root.text,self.size[0],12)
+        text_size:(self.size[0],None)
+        size_hint_x:1
+        valign:'top'
+        halign:'left'
+        on_texture_size:root.change_parent_size(self.texture_size[1])
+    Label:
+        width:0
+        size_hint_x:None
+
+<DataGridBody>:
+    view: glayout
+    #effect_cls: ScrollEffect
+    RelativeLayout:
+        size_hint:1,None
+        height:glayout.height
+        GridLayout:
+            id: glayout
+            cols: 1
+            size_hint: (1, None)
+            height: self.minimum_height
+
+<DataGridField>:
+    rows: 1
+    size_hint: (1,None)
+    padding: 2
+    spacing:2
+    canvas.before:
+        Color:
+            rgb:(1,0.5,0.05) if root.selected else (0,0,0)
+        Rectangle:
+            pos:self.pos
+            size: self.size
+    
+
+
+<DataGrid>:
+    orientation:'vertical'
+    header:header
+    body:body
+    DataGridHeader:
+        id:header
+        adapter:root.adapter
+        parent: root
+        size_hint: (1,root.header_height_hint)
+        height: root.header_height
+        cols:len(root.cols_data)
+    DataGridBody:
+        id:body
+        num_cols:len(root.cols_data)
+        adapter:root.adapter
+        size_hint: (1,1)
+
+

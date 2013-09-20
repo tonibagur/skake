@@ -1,0 +1,45 @@
+
+
+<ListDialog>:
+    btn:btn
+    datagrid:datagrid
+    height:400
+    header_container:main_layout.header_container
+    BoxLayout:
+        orientation:'vertical'
+        id:main_layout
+        header_container:header_container
+        BoxLayout:
+            id:header_container
+            height:root.header_widget_height
+            size_hint_y:None
+        DataGrid:
+            id:datagrid
+            adapter:root.adapter
+            size_hint_y:1
+        Label:
+            text:''
+            size_hint_y:None
+            height:10
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint_x: 1
+            size_hint_y: None
+            size: 0,60
+            Label:
+                size_hint_x:1
+            Button:
+                id:btn
+                #disabled:False
+                background_normal:'drawable/visto.png'
+                background_down:'drawable/visto3.png'
+                #background_disabled_normal:'drawable/visto_gris.png'
+                #background_disabled_down:'drawable/visto_gris.png'
+                size_hint_x: None
+                size_hint_y: None
+                size: 60,60
+                border: (0,0,0,0)
+                #on_press:root.pressed
+            Label:
+                size_hint_x:1
+

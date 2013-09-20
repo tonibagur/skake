@@ -10,6 +10,7 @@ from kivy.properties import ObjectProperty,StringProperty,ListProperty,BooleanPr
 from kivy.logger import Logger
 from utils.screen import ConeptumScreen
 from kivy.uix.boxlayout import BoxLayout
+from utils.drag_and_drop import DragNDropWidget,DragOverZone
 
 Builder.load_file('game/game.kv')
 
@@ -31,11 +32,11 @@ class GameScreen(ConeptumScreen):
                 p=Piece(piece=square)
                 self.board_grid.children[63-index].add_widget(p) 
 
-class Square(BoxLayout):
+class Square(BoxLayout,DragOverZone):
     __stereotype__ = StringProperty('widget')
     dark_square=BooleanProperty(True)
 
-class Piece(BoxLayout):
+class Piece(BoxLayout,DragNDropWidget):
     piece=StringProperty('')
     
     def get_texture(self):

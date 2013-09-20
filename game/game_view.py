@@ -25,8 +25,47 @@ class GameScreen(ConeptumScreen):
     
     def draw(self,b):
         self.board=b
-        for index,square in enumerate(b):        
-            print index,sqare
+        for index,square in enumerate(b):
+            self.board_grid.children[63-index].clear_widgets()
+            if square != 'x':
+                p=Piece(piece=square)
+                self.board_grid.children[63-index].add_widget(p) 
+
+class Square(BoxLayout):
+    __stereotype__ = StringProperty('widget')
+    dark_square=BooleanProperty(True)
+
+class Piece(BoxLayout):
+    piece=StringProperty('')
+    
+    def get_texture(self):
+        route='drawable/'
+        if   self.piece=='R':
+            return route+'wr.png'
+        elif self.piece=='N':
+            return route+'wn.png'
+        elif self.piece=='B':
+            return route+'wb.png'
+        elif self.piece=='Q':
+            return route+'wq.png'
+        elif self.piece=='K':
+            return route+'wk.png'
+        elif self.piece=='P':
+            return route+'wp.png'
+        elif self.piece=='r':
+            return route+'br.png'
+        elif self.piece=='n':
+            return route+'bn.png'
+        elif self.piece=='b':
+            return route+'bb.png'
+        elif self.piece=='q':
+            return route+'bq.png'
+        elif self.piece=='k':
+            return route+'bk.png'
+        elif self.piece=='p':
+            return route+'bp.png'
+        else:
+            assert False
 
 def fila_col(x):
     return x/8,x%8 
@@ -36,8 +75,3 @@ def color(i):
     x1=(f%2)==1
     x2=(c%2)==1
     return (x1 or x2) and not(x1 and x2)
-
-class Square(BoxLayout):
-    __stereotype__ = StringProperty('widget')
-    dark_square=BooleanProperty(True)
-        

@@ -30,6 +30,7 @@ class GameCtl(AbstractController):
     def prepareScreen(self):
         screen =self.screen_manager.get_screen(self.screen_name)
         screen.init_board()
+        screen.draw(b)
 
 
 game_ctl=GameCtl()

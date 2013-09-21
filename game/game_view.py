@@ -33,7 +33,6 @@ class GameScreen(ConeptumScreen):
         for index,square in enumerate(self.board):
             self.board_grid.children[63-index].clear_widgets()
             if square != xx:
-                print index,square
                 p=Piece(piece=square,droppable_zone_objects=self.board_grid.children,drag_over_objects=self.board_grid.children,index=index,reference_widget=self,screen=self)
                 self.board_grid.children[63-index].add_widget(p) 
                 

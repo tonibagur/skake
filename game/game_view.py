@@ -6,7 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty,StringProperty,ListProperty,BooleanProperty
+from kivy.properties import ObjectProperty,StringProperty,ListProperty,BooleanProperty,NumericProperty
 from kivy.logger import Logger
 from utils.screen import ConeptumScreen
 from kivy.uix.boxlayout import BoxLayout
@@ -21,12 +21,14 @@ class GameScreen(ConeptumScreen):
     def init_board(self):
         self.board_grid.clear_widgets()
         for i in range(64):
-            sq=Square(dark_square=color(i))
+            sq=Square(dark_square=color(i),index=i)
             self.board_grid.add_widget(sq)
     
-    def draw(self,b):
-        self.board=b
-        for index,square in enumerate(b):
+    def on_board(self,*args,**kwargs):
+        self.draw()
+    
+    def draw(self):
+        for index,square in enumerate(self.board):
             self.board_grid.children[63-index].clear_widgets()
             if square != 'x':
                 p=Piece(piece=square)
@@ -35,6 +37,7 @@ class GameScreen(ConeptumScreen):
 class Square(BoxLayout,DragOverZone):
     __stereotype__ = StringProperty('widget')
     dark_square=BooleanProperty(True)
+    index=NumericProperty(0)
 
 class Piece(BoxLayout,DragNDropWidget):
     piece=StringProperty('')

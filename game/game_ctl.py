@@ -28,9 +28,10 @@ class GameCtl(AbstractController):
     def createScreens(self):
         self.screen_manager.add_widget(GameScreen(name=self.screen_name))
     def prepareScreen(self):
-        screen =self.screen_manager.get_screen(self.screen_name)
+        screen = self.screen_manager.get_screen(self.screen_name)
         screen.init_board()
-        screen.draw(b)
+        screen.board = b
+        #screen.draw()
 
 
 game_ctl=GameCtl()

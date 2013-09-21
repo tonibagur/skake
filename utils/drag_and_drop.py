@@ -189,7 +189,8 @@ class DragNDropWidget(Widget):
                     break
             if dropped_ok:
                 self.drop_func(*([found_obj]+self.drop_args))
-                anim = Animation(opacity=0, duration=0.7, t="in_quad")
+                anim = Animation(opacity=0, duration=0.01, t="in_quad")
+                #anim = Animation(pos=found_obj.pos,duration=0.7,t='in_quad')
                 anim.bind(on_complete=self.deparent)
                 anim.start(self)
             else:

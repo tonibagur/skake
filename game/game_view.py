@@ -25,14 +25,20 @@ class GameScreen(ConeptumScreen):
             self.board_grid.add_widget(sq)
     
     def on_board(self,*args,**kwargs):
-        self.draw()
+        #self.draw()
+        pass
     
-    def draw(self):
+    def draw_board(self):
         for index,square in enumerate(self.board):
             self.board_grid.children[63-index].clear_widgets()
             if square != 'x':
-                p=Piece(piece=square)
+                p=Piece(piece=square,droppable_zone_objects=self.board_grid.children,drag_over_objects=self.board_grid.children,index=index,reference_widget=self,screen=self)
                 self.board_grid.children[63-index].add_widget(p) 
+                
+    def move_to(self,piece,square):
+        self.board[piece.index]='x'
+        self.board[square.index]=piece.piece
+        self.draw_board()
 
 class Square(BoxLayout,DragOverZone):
     __stereotype__ = StringProperty('widget')
@@ -41,6 +47,8 @@ class Square(BoxLayout,DragOverZone):
 
 class Piece(BoxLayout,DragNDropWidget):
     piece=StringProperty('')
+    screen=ObjectProperty()
+    index=NumericProperty()
     
     def get_texture(self):
         route='drawable/'
@@ -70,6 +78,9 @@ class Piece(BoxLayout,DragNDropWidget):
             return route+'bp.png'
         else:
             assert False
+            
+    def move_to(self,dest,*args,**kwargs):
+        self.screen.move_to(self,dest)
 
 def fila_col(x):
     return x/8,x%8 

@@ -31,7 +31,7 @@ class GameCtl(AbstractController):
         screen = self.screen_manager.get_screen(self.screen_name)
         screen.init_board()
         screen.board = b
-        #screen.draw()
+        screen.draw_board()
 
 
 game_ctl=GameCtl()

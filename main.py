@@ -141,12 +141,6 @@ class EscacApp(App):
         return True
 
     def on_resume(self):
-        from task_monitor.task_monitor_ctl import task_monitor_ctl
-        from fotos.fotos_ctl import fotos_ctl   
-        if self.platform=='android' and task_monitor_ctl.called_intent_foto:
-            task_monitor_ctl.enviar_foto()
-        if self.platform=='android' and fotos_ctl.called_intent_foto:
-            fotos_ctl.enviar_foto()
         return True
 
 if __name__ == '__main__':

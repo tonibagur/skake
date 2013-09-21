@@ -44,6 +44,20 @@ class Square(BoxLayout,DragOverZone):
     __stereotype__ = StringProperty('widget')
     dark_square=BooleanProperty(True)
     index=NumericProperty(0)
+    color_square=ListProperty([0,0,0])
+    def __init__(self,*args,**kwargs):
+        super(Square,self).__init__(*args,**kwargs)
+        if 'dark_square' in kwargs:
+            self.color_square = (0.7,0.7,0.7) if kwargs['dark_square'] else (1,1,1)
+        else:
+            self.color_square = (0,0,0)
+    def on_drag_over(self,*args,**kwargs):
+        #super(Square,self).on_drag_over(*args,**kwargs)
+        self.color_square=(0.7,0.7,0.7) if self.dark_square else (1,1,1)
+        if self.drag_over:
+            self.color_square[0]-=0.2
+            self.color_square[1]-=0.2
+        print "on_drag_over",self.drag_over,self.index
 
 class Piece(BoxLayout,DragNDropWidget):
     piece=StringProperty('')

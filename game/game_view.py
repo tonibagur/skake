@@ -57,7 +57,7 @@ class Square(BoxLayout,DragOverZone):
         if self.drag_over:
             self.color_square[0]-=0.2
             self.color_square[1]-=0.2
-        print "on_drag_over",self.drag_over,self.index
+    
 
 class Piece(BoxLayout,DragNDropWidget):
     piece=StringProperty('')

@@ -11,6 +11,7 @@ from kivy.logger import Logger
 from utils.screen import ConeptumScreen
 from kivy.uix.boxlayout import BoxLayout
 from utils.drag_and_drop import DragNDropWidget,DragOverZone
+from piece_codes import *
 
 Builder.load_file('game/game.kv')
 
@@ -31,12 +32,13 @@ class GameScreen(ConeptumScreen):
     def draw_board(self):
         for index,square in enumerate(self.board):
             self.board_grid.children[63-index].clear_widgets()
-            if square != 'x':
+            if square != xx:
+                print index,square
                 p=Piece(piece=square,droppable_zone_objects=self.board_grid.children,drag_over_objects=self.board_grid.children,index=index,reference_widget=self,screen=self)
                 self.board_grid.children[63-index].add_widget(p) 
                 
     def move_to(self,piece,square):
-        self.board[piece.index]='x'
+        self.board[piece.index]=xx
         self.board[square.index]=piece.piece
         self.draw_board()
 
@@ -60,37 +62,39 @@ class Square(BoxLayout,DragOverZone):
     
 
 class Piece(BoxLayout,DragNDropWidget):
-    piece=StringProperty('')
+    piece=NumericProperty()
     screen=ObjectProperty()
     index=NumericProperty()
     
     def get_texture(self):
         route='drawable/'
-        if   self.piece=='R':
+        if   self.piece==wR:
             return route+'wr.png'
-        elif self.piece=='N':
+        elif self.piece==wN:
             return route+'wn.png'
-        elif self.piece=='B':
+        elif self.piece==wB:
             return route+'wb.png'
-        elif self.piece=='Q':
+        elif self.piece==wQ:
             return route+'wq.png'
-        elif self.piece=='K':
+        elif self.piece==wK:
             return route+'wk.png'
-        elif self.piece=='P':
+        elif self.piece==wP:
             return route+'wp.png'
-        elif self.piece=='r':
+        elif self.piece==bR:
             return route+'br.png'
-        elif self.piece=='n':
+        elif self.piece==bN:
             return route+'bn.png'
-        elif self.piece=='b':
+        elif self.piece==bB:
             return route+'bb.png'
-        elif self.piece=='q':
+        elif self.piece==bQ:
             return route+'bq.png'
-        elif self.piece=='k':
+        elif self.piece==bK:
             return route+'bk.png'
-        elif self.piece=='p':
+        elif self.piece==bP:
             return route+'bp.png'
         else:
+            import pdb
+            pdb.set_trace()
             assert False
             
     def move_to(self,dest,*args,**kwargs):

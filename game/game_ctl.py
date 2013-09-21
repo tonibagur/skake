@@ -10,16 +10,17 @@ from kivy.properties import StringProperty,ObjectProperty
 from game.game_view import GameScreen
 import traceback
 from kivy.logger import Logger
+from piece_codes import *
 
 
-b=['r','n','b','q','k','b','n','r',
-   'p','p','p','p','p','p','p','p',
-   'x','x','x','x','x','x','x','x',
-   'x','x','x','x','x','x','x','x',
-   'x','x','x','x','x','x','x','x',
-   'x','x','x','x','x','x','x','x',
-   'P','P','P','P','P','P','P','P',
-   'R','N','B','Q','K','B','N','R'
+b=[bR,bN,bB,bQ,bK,bB,bN,bR,
+   bP,bP,bP,bP,bP,bP,bP,bP,
+   xx,xx,xx,xx,xx,xx,xx,xx,
+   xx,xx,xx,xx,xx,xx,xx,xx,
+   xx,xx,xx,xx,xx,xx,xx,xx,
+   xx,xx,xx,xx,xx,xx,xx,xx,
+   wP,wP,wP,wP,wP,wP,wP,wP,
+   wR,wN,wB,wQ,wK,wB,wN,wR
   ]
    
 class GameCtl(AbstractController):

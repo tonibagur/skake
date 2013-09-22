@@ -11,13 +11,13 @@ from kivy.logger import Logger
 from utils.screen import ConeptumScreen
 from kivy.uix.boxlayout import BoxLayout
 from utils.drag_and_drop import DragNDropWidget,DragOverZone
-from piece_codes import *
+from chess.piece_codes import *
 
 Builder.load_file('game/game.kv')
 
 class GameScreen(ConeptumScreen):
     board_grid=ObjectProperty()
-    board=ListProperty()
+    board=ObjectProperty()
     
     def init_board(self):
         self.board_grid.clear_widgets()
@@ -37,8 +37,8 @@ class GameScreen(ConeptumScreen):
                 self.board_grid.children[63-index].add_widget(p) 
                 
     def move_to(self,piece,square):
-        self.board[piece.index]=xx
-        self.board[square.index]=piece.piece
+        self.board.set_square(piece.index,xx)
+        self.board.set_square(square.index,piece.piece)
         self.draw_board()
 
 class Square(BoxLayout,DragOverZone):

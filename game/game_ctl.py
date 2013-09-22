@@ -10,18 +10,8 @@ from kivy.properties import StringProperty,ObjectProperty
 from game.game_view import GameScreen
 import traceback
 from kivy.logger import Logger
-from piece_codes import *
-
-
-b=[bR,bN,bB,bQ,bK,bB,bN,bR,
-   bP,bP,bP,bP,bP,bP,bP,bP,
-   xx,xx,xx,xx,xx,xx,xx,xx,
-   xx,xx,xx,xx,xx,xx,xx,xx,
-   xx,xx,xx,xx,xx,xx,xx,xx,
-   xx,xx,xx,xx,xx,xx,xx,xx,
-   wP,wP,wP,wP,wP,wP,wP,wP,
-   wR,wN,wB,wQ,wK,wB,wN,wR
-  ]
+from chess.piece_codes import *
+from chess.position import Position
    
 class GameCtl(AbstractController):
     screen_name='game'
@@ -31,7 +21,7 @@ class GameCtl(AbstractController):
     def prepareScreen(self):
         screen = self.screen_manager.get_screen(self.screen_name)
         screen.init_board()
-        screen.board = b
+        screen.board = Position()
         screen.draw_board()
 
 

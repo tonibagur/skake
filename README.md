@@ -1,0 +1,4 @@
+skake
+=====
+
+Chess + Python + Kivy

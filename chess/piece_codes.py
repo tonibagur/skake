@@ -12,7 +12,8 @@ bK=11
 bP=12
 xx=0
 
-WHITE=True
-BLACK=False
+WHITE=1
+BLACK=0
+EMPTY=-1
 
 ALL_PIECE_CODES=[wR,wN,wB,wQ,wK,wP,bR,bN,bB,bQ,bK,bP,xx]

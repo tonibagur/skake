@@ -46,3 +46,42 @@ class TestMoveGen(unittest.TestCase):
                     self.assertEqual(m.column,q)
                     self.assertEqual(m.row,mgsq.row)
                     q-=1
+                    
+    def test_move_diag(self):
+        for i in range(8):
+            for j in range(8):
+                mgsq=self.movegen.squares[self.pos.get_index_row_col(i,j)]
+                self.assertEqual(len(mgsq.diag_moves1),min(7-i,7-j))
+                self.assertEqual(len(mgsq.diag_moves2),min(i,7-j))
+                self.assertEqual(len(mgsq.diag_moves3),min(7-i,j))
+                self.assertEqual(len(mgsq.diag_moves4),min(i,j))
+                self.assertEqual(mgsq.row,i)
+                self.assertEqual(mgsq.column,j)
+                r=i+1
+                q=j+1
+                for m in mgsq.diag_moves1:
+                    self.assertEqual(m.column,q)
+                    self.assertEqual(m.row,r)
+                    r+=1
+                    q+=1
+                r=i-1
+                q=j+1
+                for m in mgsq.diag_moves2:
+                    self.assertEqual(m.column,q)
+                    self.assertEqual(m.row,r)
+                    r-=1
+                    q+=1
+                r=i+1
+                q=j-1
+                for m in mgsq.diag_moves3:
+                    self.assertEqual(m.column,q)
+                    self.assertEqual(m.row,r)
+                    r+=1
+                    q-=1
+                r=i-1
+                q=j-1
+                for m in mgsq.diag_moves4:
+                    self.assertEqual(m.column,q)
+                    self.assertEqual(m.row,r)
+                    r-=1
+                    q-=1

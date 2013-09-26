@@ -63,4 +63,34 @@ class MoveGenerator(object):
         while c2>=0:
             self.squares[i].row_moves2.append(self.squares[self.pos().get_index_row_col(f,c2)])
             c2-=1
-    
+
+    def generate_diag_moves(self,i):
+        f,c = self.pos().get_row_col(i)
+
+        c1=c+1
+        f1=f+1
+        while c1<=7 and f1<=7:
+            self.squares[i].diag_moves1.append(self.squares[self.pos().get_index_row_col(f1,c1)])
+            c1+=1
+            f1+=1
+
+        c1=c+1
+        f1=f-1
+        while c1<=7 and f1>=0:
+            self.squares[i].diag_moves2.append(self.squares[self.pos().get_index_row_col(f1,c1)])
+            c1+=1
+            f1-=1
+
+        c1=c-1
+        f1=f+1
+        while c1>=0 and f1<=7:
+            self.squares[i].diag_moves3.append(self.squares[self.pos().get_index_row_col(f1,c1)])
+            c1-=1
+            f1+=1
+        
+        c1=c-1
+        f1=f-1
+        while c1>=0 and f1>=0:
+            self.squares[i].diag_moves4.append(self.squares[self.pos().get_index_row_col(f1,c1)])
+            c1-=1
+            f1-=1

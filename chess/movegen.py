@@ -3,6 +3,7 @@
 import weakref
 
 class MoveGeneratorSquare(object):
+    
     def __init__(self,row,column):
         self.row_moves1=[]
         self.row_moves2=[]
@@ -15,7 +16,7 @@ class MoveGeneratorSquare(object):
         self.diag_moves3=[]
         self.diag_moves4=[]
         
-        self.knights=[]
+        self.knight_moves=[]
         
         self.pawn_advance1_white=None
         self.pawn_advance2_white=None
@@ -33,6 +34,7 @@ class MoveGeneratorSquare(object):
         
     
 class MoveGenerator(object):
+    knight_deltas=[(1,2),(2,1),(-1,2),(-2,1),(1,-2),(2,-1),(-1,-2),(-2,-1)]
     def __init__(self,pos):
         pos.generator=self
         self.pos=weakref.ref(pos)
@@ -41,6 +43,7 @@ class MoveGenerator(object):
             self.generate_column_moves(i)
             self.generate_row_moves(i)
             self.generate_diag_moves(i)
+            self.generate_knight_moves(i)
             
     def generate_column_moves(self,i):
         f,c = self.pos().get_row_col(i)
@@ -94,3 +97,12 @@ class MoveGenerator(object):
             self.squares[i].diag_moves4.append(self.squares[self.pos().get_index_row_col(f1,c1)])
             c1-=1
             f1-=1
+    
+    def generate_knight_moves(self,i):
+        f,c = self.pos().get_row_col(i)
+        
+        for d in self.knight_deltas:
+            f2=f+d[0]
+            c2=c+d[1]
+            if 0<=f2<=7 and 0<=c2<=7:
+                self.squares[i].knight_moves.append(self.squares[self.pos().get_index_row_col(f2,c2)])

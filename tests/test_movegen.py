@@ -85,3 +85,16 @@ class TestMoveGen(unittest.TestCase):
                     self.assertEqual(m.row,r)
                     r-=1
                     q-=1
+                    
+                    
+    def test_move_knights(self):
+        for i in range(8):
+            for j in range(8):
+                mgsq=self.movegen.squares[self.pos.get_index_row_col(i,j)]
+                candidates=[x for x in self.movegen.knight_deltas if 0<=(i+x[0])<=7 and 0<=(j+x[1])<=7]
+                self.assertEqual(len(mgsq.knight_moves),len(candidates))
+                self.assertEqual(mgsq.row,i)
+                self.assertEqual(mgsq.column,j)
+                for q,s in enumerate(mgsq.knight_moves):
+                    self.assertEqual(s.row,i+candidates[q][0])
+                    self.assertEqual(s.column,j+candidates[q][1])

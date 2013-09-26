@@ -24,6 +24,9 @@ class MoveGeneratorSquare(object):
         self.pawn_advance1_black=None
         self.pawn_advance2_black=None
         
+        #TODO: pot ser faltaria una referencia especial a setena i segona files per poder calcular
+        #rapidament les promocions que no venen de captura
+        
         self.pawn_captures_white_from=[]
         self.pawn_captures_white_from=[]
         

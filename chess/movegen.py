@@ -44,6 +44,7 @@ class MoveGenerator(object):
             self.generate_row_moves(i)
             self.generate_diag_moves(i)
             self.generate_knight_moves(i)
+            self.generate_pawn_advances(i)
             
     def generate_column_moves(self,i):
         f,c = self.pos().get_row_col(i)
@@ -106,3 +107,15 @@ class MoveGenerator(object):
             c2=c+d[1]
             if 0<=f2<=7 and 0<=c2<=7:
                 self.squares[i].knight_moves.append(self.squares[self.pos().get_index_row_col(f2,c2)])
+
+    def generate_pawn_advances(self,i):
+        f,c = self.pos().get_row_col(i)
+        if f<7:
+            self.squares[i].pawn_advance1_white=self.squares[self.pos().get_index_row_col(f+1,c)]
+        if f==2:
+            self.squares[i].pawn_advance2_white=self.squares[self.pos().get_index_row_col(f+2,c)]
+        if f>0:    
+            self.squares[i].pawn_advance1_black=self.squares[self.pos().get_index_row_col(f-1,c)]
+        if f==7:
+            self.squares[i].pawn_advance2_black=self.squares[self.pos().get_index_row_col(f-2,c)]
+        

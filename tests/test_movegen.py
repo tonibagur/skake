@@ -98,3 +98,28 @@ class TestMoveGen(unittest.TestCase):
                 for q,s in enumerate(mgsq.knight_moves):
                     self.assertEqual(s.row,i+candidates[q][0])
                     self.assertEqual(s.column,j+candidates[q][1])
+                    
+    def test_pawn_advances(self):
+        for i in range(8):
+            for j in range(8):
+                mgsq=self.movegen.squares[self.pos.get_index_row_col(i,j)]
+                if i!=2:
+                    self.assertEqual(mgsq.pawn_advance2_white,None)
+                else:
+                    self.assertEqual(mgsq.pawn_advance2_white.row,i+2)
+                    self.assertEqual(mgsq.pawn_advance2_white.column,j)
+                if i!=7:
+                    self.assertEqual(mgsq.pawn_advance2_black,None)
+                else:
+                    self.assertEqual(mgsq.pawn_advance2_black.row,i-2)
+                    self.assertEqual(mgsq.pawn_advance2_black.column,j)
+                if i==7:
+                    self.assertEqual(mgsq.pawn_advance1_white,None)
+                else:
+                    self.assertEqual(mgsq.pawn_advance1_white.row,i+1)
+                    self.assertEqual(mgsq.pawn_advance1_white.column,j)
+                if i==0:
+                    self.assertEqual(mgsq.pawn_advance1_black,None)
+                else:
+                    self.assertEqual(mgsq.pawn_advance1_black.row,i-1)
+                    self.assertEqual(mgsq.pawn_advance1_black.column,j)

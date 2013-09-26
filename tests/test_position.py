@@ -173,7 +173,19 @@ class Test_Position_PosInicial(unittest.TestCase):
         self.assertEqual(self.pos.get_row_col_value(6,3),bB)
         self.assertEqual(self.pos.get_square(11),bB)
             
-    def set_row_col_value(self,row,col,value):
-        assert (0 <= row < 8) and (0 <= col < 8) and (value in ALL_PIECE_CODES) 
-        row2=7-row
-        self.b[row2*8+col]=value
+    def test_get_index_row_col(self):
+        self.assertRaises(AssertionError,self.pos.get_index_row_col,-1,0)
+        self.assertRaises(AssertionError,self.pos.get_index_row_col,0,-1)
+        self.assertRaises(AssertionError,self.pos.get_index_row_col,-2,0)
+        self.assertRaises(AssertionError,self.pos.get_index_row_col,0,-2)
+        self.assertRaises(AssertionError,self.pos.get_index_row_col,8,0)
+        self.assertRaises(AssertionError,self.pos.get_index_row_col,0,8)
+        self.assertRaises(AssertionError,self.pos.get_index_row_col,9,0)
+        self.assertRaises(AssertionError,self.pos.get_index_row_col,0,9)
+        self.assertEqual(self.pos.get_index_row_col(7,0),0)
+        self.assertEqual(self.pos.get_index_row_col(7,7),7)
+        self.assertEqual(self.pos.get_index_row_col(0,0),56)
+        self.assertEqual(self.pos.get_index_row_col(0,7),63)
+        self.assertEqual(self.pos.get_index_row_col(5,0),16)
+        
+    

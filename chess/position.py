@@ -20,6 +20,7 @@ class Position(object):
     ep_sq=None
     turn=WHITE
     check=False
+    generator=None
     
     def set_square(self,square,value):
         assert (0 <= square < 64) and (value in ALL_PIECE_CODES)
@@ -44,6 +45,11 @@ class Position(object):
         assert (0 <= row < 8) and (0 <= col < 8) and (value in ALL_PIECE_CODES) 
         row2=7-row
         self.b[row2*8+col]=value
+        
+    def get_index_row_col(self,row,col):
+        assert (0 <= row < 8) and (0 <= col < 8)
+        row2=7-row
+        return row2*8+col
     
     def __iter__(self):
         for x in self.b:

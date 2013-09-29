@@ -27,8 +27,8 @@ class MoveGeneratorSquare(object):
         #TODO: potser faltaria una referencia especial a setena i segona files per poder calcular
         #rapidament les promocions que no venen de captura
         
-        self.pawn_captures_white_from=[]
-        self.pawn_captures_black_from=[]
+        self.pawn_captures_white=[]
+        self.pawn_captures_black=[]
         
         self.king_moves=[]
         
@@ -140,16 +140,16 @@ class MoveGenerator(object):
         f1=f+1
         c1=c-1
         if 0<=f1<=7 and 0<=c1<=7:
-            self.squares[i].pawn_captures_white_from.append(self.squares[self.pos().get_index_row_col(f1,c1)])        
+            self.squares[i].pawn_captures_white.append(self.squares[self.pos().get_index_row_col(f1,c1)])        
         f1=f+1
         c1=c+1
         if 0<=f1<=7 and 0<=c1<=7:
-            self.squares[i].pawn_captures_white_from.append(self.squares[self.pos().get_index_row_col(f1,c1)])
+            self.squares[i].pawn_captures_white.append(self.squares[self.pos().get_index_row_col(f1,c1)])
         f1=f-1
         c1=c-1
         if 0<=f1<=7 and 0<=c1<=7:
-            self.squares[i].pawn_captures_black_from.append(self.squares[self.pos().get_index_row_col(f1,c1)])        
+            self.squares[i].pawn_captures_black.append(self.squares[self.pos().get_index_row_col(f1,c1)])        
         f1=f-1
         c1=c+1
         if 0<=f1<=7 and 0<=c1<=7:
-            self.squares[i].pawn_captures_black_from.append(self.squares[self.pos().get_index_row_col(f1,c1)])        
+            self.squares[i].pawn_captures_black.append(self.squares[self.pos().get_index_row_col(f1,c1)])        

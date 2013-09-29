@@ -142,72 +142,72 @@ class TestMoveGen(unittest.TestCase):
             for j in range(8):
                 mgsq=self.movegen.squares[self.pos.get_index_row_col(i,j)]
                 if i == 0:
-                    self.assertEqual(len(mgsq.pawn_captures_white_from),0)
-                    if j==0:
-                        self.assertEqual(len(mgsq.pawn_captures_black_from),1)
-                        for q in mgsq.pawn_captures_black_from:
-                            self.assertEqual(q.row,i+1)
-                            self.assertEqual(q.column,j+1)
-                    elif j<7:
-                        self.assertEqual(len(mgsq.pawn_captures_black_from),2)
-                        s=set()
-                        for q in mgsq.pawn_captures_black_from:
-                            self.assertEqual(q.row,i+1)
-                            s.add(q.column)
-                        self.assertEqual(s,set([j+1,j-1]))
-                    else:
-                        self.assertEqual(len(mgsq.pawn_captures_black_from),1)
-                        for q in mgsq.pawn_captures_black_from:
-                            self.assertEqual(q.row,i+1)
-                            self.assertEqual(q.column,j-1)
-                elif i < 7:
-                    if j==0:
-                        self.assertEqual(len(mgsq.pawn_captures_white_from),1)
-                        for q in mgsq.pawn_captures_white_from:
-                            self.assertEqual(q.row,i-1)
-                            self.assertEqual(q.column,j+1)
-                        self.assertEqual(len(mgsq.pawn_captures_black_from),1)
-                        for q in mgsq.pawn_captures_black_from:
-                            self.assertEqual(q.row,i+1)
-                            self.assertEqual(q.column,j+1)
-                    elif j<7:
-                        self.assertEqual(len(mgsq.pawn_captures_white_from),2)
-                        s=set()
-                        for q in mgsq.pawn_captures_white_from:
-                            self.assertEqual(q.row,i-1)
-                            s.add(q.column)
-                        self.assertEqual(s,set([j+1,j-1]))
-                        self.assertEqual(len(mgsq.pawn_captures_black_from),2)
-                        s=set()
-                        for q in mgsq.pawn_captures_black_from:
-                            self.assertEqual(q.row,i+1)
-                            s.add(q.column)
-                        self.assertEqual(s,set([j+1,j-1]))
-                    else:
-                        self.assertEqual(len(mgsq.pawn_captures_white_from),1)
-                        for q in mgsq.pawn_captures_white_from:
-                            self.assertEqual(q.row,i-1)
-                            self.assertEqual(q.column,j-1)
-                        self.assertEqual(len(mgsq.pawn_captures_black_from),1)
-                        for q in mgsq.pawn_captures_black_from:
-                            self.assertEqual(q.row,i+1)
-                            self.assertEqual(q.column,j-1)
-                else:
                     self.assertEqual(len(mgsq.pawn_captures_black_from),0)
                     if j==0:
                         self.assertEqual(len(mgsq.pawn_captures_white_from),1)
                         for q in mgsq.pawn_captures_white_from:
-                            self.assertEqual(q.row,i-1)
+                            self.assertEqual(q.row,i+1)
                             self.assertEqual(q.column,j+1)
                     elif j<7:
                         self.assertEqual(len(mgsq.pawn_captures_white_from),2)
                         s=set()
                         for q in mgsq.pawn_captures_white_from:
-                            self.assertEqual(q.row,i-1)
+                            self.assertEqual(q.row,i+1)
                             s.add(q.column)
                         self.assertEqual(s,set([j+1,j-1]))
                     else:
                         self.assertEqual(len(mgsq.pawn_captures_white_from),1)
                         for q in mgsq.pawn_captures_white_from:
+                            self.assertEqual(q.row,i+1)
+                            self.assertEqual(q.column,j-1)
+                elif i < 7:
+                    if j==0:
+                        self.assertEqual(len(mgsq.pawn_captures_black_from),1)
+                        for q in mgsq.pawn_captures_black_from:
+                            self.assertEqual(q.row,i-1)
+                            self.assertEqual(q.column,j+1)
+                        self.assertEqual(len(mgsq.pawn_captures_white_from),1)
+                        for q in mgsq.pawn_captures_white_from:
+                            self.assertEqual(q.row,i+1)
+                            self.assertEqual(q.column,j+1)
+                    elif j<7:
+                        self.assertEqual(len(mgsq.pawn_captures_black_from),2)
+                        s=set()
+                        for q in mgsq.pawn_captures_black_from:
+                            self.assertEqual(q.row,i-1)
+                            s.add(q.column)
+                        self.assertEqual(s,set([j+1,j-1]))
+                        self.assertEqual(len(mgsq.pawn_captures_white_from),2)
+                        s=set()
+                        for q in mgsq.pawn_captures_white_from:
+                            self.assertEqual(q.row,i+1)
+                            s.add(q.column)
+                        self.assertEqual(s,set([j+1,j-1]))
+                    else:
+                        self.assertEqual(len(mgsq.pawn_captures_black_from),1)
+                        for q in mgsq.pawn_captures_black_from:
+                            self.assertEqual(q.row,i-1)
+                            self.assertEqual(q.column,j-1)
+                        self.assertEqual(len(mgsq.pawn_captures_white_from),1)
+                        for q in mgsq.pawn_captures_white_from:
+                            self.assertEqual(q.row,i+1)
+                            self.assertEqual(q.column,j-1)
+                else:
+                    self.assertEqual(len(mgsq.pawn_captures_white_from),0)
+                    if j==0:
+                        self.assertEqual(len(mgsq.pawn_captures_black_from),1)
+                        for q in mgsq.pawn_captures_black_from:
+                            self.assertEqual(q.row,i-1)
+                            self.assertEqual(q.column,j+1)
+                    elif j<7:
+                        self.assertEqual(len(mgsq.pawn_captures_black_from),2)
+                        s=set()
+                        for q in mgsq.pawn_captures_black_from:
+                            self.assertEqual(q.row,i-1)
+                            s.add(q.column)
+                        self.assertEqual(s,set([j+1,j-1]))
+                    else:
+                        self.assertEqual(len(mgsq.pawn_captures_black_from),1)
+                        for q in mgsq.pawn_captures_black_from:
                             self.assertEqual(q.row,i-1)
                             self.assertEqual(q.column,j-1)

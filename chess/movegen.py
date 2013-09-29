@@ -30,7 +30,7 @@ class MoveGeneratorSquare(object):
         self.pawn_captures_white_from=[]
         self.pawn_captures_black_from=[]
         
-        self.kings=[]
+        self.king_moves=[]
         
         self.row=row
         self.column=column
@@ -38,6 +38,7 @@ class MoveGeneratorSquare(object):
     
 class MoveGenerator(object):
     knight_deltas=[(1,2),(2,1),(-1,2),(-2,1),(1,-2),(2,-1),(-1,-2),(-2,-1)]
+    king_deltas=[(1,0),(1,1),(0,1),(-1,0),(-1,1),(0,-1),(1,-1),(-1,-1)]
     def __init__(self,pos):
         pos.generator=self
         self.pos=weakref.ref(pos)
@@ -49,6 +50,7 @@ class MoveGenerator(object):
             self.generate_knight_moves(i)
             self.generate_pawn_advances(i)
             self.generate_pawn_captures(i)
+            self.generate_king_moves(i)
             
     def generate_column_moves(self,i):
         f,c = self.pos().get_row_col(i)
@@ -111,6 +113,15 @@ class MoveGenerator(object):
             c2=c+d[1]
             if 0<=f2<=7 and 0<=c2<=7:
                 self.squares[i].knight_moves.append(self.squares[self.pos().get_index_row_col(f2,c2)])
+                
+    def generate_king_moves(self,i):
+        f,c = self.pos().get_row_col(i)
+        
+        for d in self.king_deltas:
+            f2=f+d[0]
+            c2=c+d[1]
+            if 0<=f2<=7 and 0<=c2<=7:
+                self.squares[i].king_moves.append(self.squares[self.pos().get_index_row_col(f2,c2)])
 
     def generate_pawn_advances(self,i):
         f,c = self.pos().get_row_col(i)

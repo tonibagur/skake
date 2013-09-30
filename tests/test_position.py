@@ -27,6 +27,7 @@ class Test_Position_PosInicial(unittest.TestCase):
         self.assertEqual(self.pos.ep_sq,None)
         self.assertEqual(self.pos.turn,True)
         self.assertEqual(self.pos.check,False)
+        self.assertEqual(self.pos.pieces[xx],set(range(16,48)))
         
     def test_set_get_squares_out_of_range(self):
         self.assertRaises(AssertionError,self.pos.set_square,-1,wB)
@@ -135,7 +136,7 @@ class Test_Position_PosInicial(unittest.TestCase):
         self.assertRaises(AssertionError,self.pos.set_row_col_value,7,7,-1)
         self.assertRaises(AssertionError,self.pos.set_row_col_value,0,7,-2)
         self.assertRaises(AssertionError,self.pos.set_row_col_value,5,6,-3)
-        self.assertRaises(AssertionError,self.pos.set_row_col_value,7,0,13)
+        self.assertRaises(AssertionError,self.pos.set_row_col_value,7,0,0)
         self.assertRaises(AssertionError,self.pos.set_row_col_value,7,0,14)
         self.assertRaises(AssertionError,self.pos.set_row_col_value,0,7,-1)
         self.assertRaises(AssertionError,self.pos.set_row_col_value,0,7,14)

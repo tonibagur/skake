@@ -10,7 +10,13 @@ bB=9
 bQ=10
 bK=11
 bP=12
-xx=0
+xx=13
+
+def color(code):
+    if not (0<code<=bP):
+        return xx
+    else:
+        return 1<=code<=6
 
 WHITE=True
 BLACK=False

@@ -16,10 +16,10 @@ def color(code):
     if not (0<code<=bP):
         return xx
     else:
-        return 1<=code<=6
+        return 'WHITE' if 1<=code<=6 else 'BLACK'
 
-WHITE=True
-BLACK=False
+WHITE='WHITE'
+BLACK='BLACK'
 EMPTY=-1
 
 ALL_PIECE_CODES=[wR,wN,wB,wQ,wK,wP,bR,bN,bB,bQ,bK,bP,xx]

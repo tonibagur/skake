@@ -57,8 +57,9 @@ class Position(object):
     def set_square(self,square,value):
         assert (0 <= square < 64) and (value in ALL_PIECE_CODES)
         old_val=self.b[square]
-        self.pieces[color(old_val)].remove(square)
         self.pieces[old_val].remove(square)
+        if old_val!=xx:
+            self.pieces[color(old_val)].remove(square)
         self.b[square]=value
         self.pieces[color(value)].add(square)
         self.pieces[value].add(square)

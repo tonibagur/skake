@@ -4,7 +4,15 @@ from chess.position import Position
 from chess.piece_codes import *
 from exceptions import AssertionError
 
+
+'''Class to use(replacing unittest.TestCase) if we want to run a test_case inside our debugger framework'''
+class dummyTest(object):
+    def assertEqual(self,a,b):
+        if a!=b:
+            print a,"!=",b
+
 class Test_Position_PosInicial(unittest.TestCase):
+#class Test_Position_PosInicial(dummyTest): 
     def setUp(self):
         self.pos=Position()
         self.b=[bR,bN,bB,bQ,bK,bB,bN,bR,
@@ -25,7 +33,7 @@ class Test_Position_PosInicial(unittest.TestCase):
         self.assertEqual(self.pos.b_castle_qs,True)
         self.assertEqual(self.pos.b_castle_ks,True)
         self.assertEqual(self.pos.ep_sq,None)
-        self.assertEqual(self.pos.turn,True)
+        self.assertEqual(self.pos.turn,WHITE)
         self.assertEqual(self.pos.check,False)
         self.assertEqual(self.pos.pieces[xx],set(range(16,48)))
         
@@ -189,4 +197,3 @@ class Test_Position_PosInicial(unittest.TestCase):
         self.assertEqual(self.pos.get_index_row_col(0,7),63)
         self.assertEqual(self.pos.get_index_row_col(5,0),16)
         
-    

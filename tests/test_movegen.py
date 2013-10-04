@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
 from chess.movegen import *
 
 from chess.position import Position

@@ -7,28 +7,29 @@ class Position(object):
     
     def __init__(self,board_vals=None,w_castle_qs=True,w_castle_ks=True,
                  b_castle_qs=True,b_castle_ks=True,ep_sq=None,
-                 turn=WHITE,check=False,generator=None):
+                 turn=WHITE,check=False,generator=None,fmr=0,move_num=1):
         if not board_vals:
-            self.b=[bR,bN,bB,bQ,bK,bB,bN,bR,
-                    bP,bP,bP,bP,bP,bP,bP,bP,
-                    xx,xx,xx,xx,xx,xx,xx,xx,
-                    xx,xx,xx,xx,xx,xx,xx,xx,
-                    xx,xx,xx,xx,xx,xx,xx,xx,
-                    xx,xx,xx,xx,xx,xx,xx,xx,
-                    wP,wP,wP,wP,wP,wP,wP,wP,
-                    wR,wN,wB,wQ,wK,wB,wN,wR
+            self.b=[bR,bN,bB,bQ,bK,bB,bN,bR,#00..08
+                    bP,bP,bP,bP,bP,bP,bP,bP,#08..15
+                    xx,xx,xx,xx,xx,xx,xx,xx,#16..23
+                    xx,xx,xx,xx,xx,xx,xx,xx,#24..31
+                    xx,xx,xx,xx,xx,xx,xx,xx,#32..39
+                    xx,xx,xx,xx,xx,xx,xx,xx,#40..47
+                    wP,wP,wP,wP,wP,wP,wP,wP,#48..55
+                    wR,wN,wB,wQ,wK,wB,wN,wR #56..63
                     ]
         else:
             self.b=board_vals
         self.w_castle_qs=w_castle_qs
-        self.w_castle_ks=True
-        self.b_castle_qs=True
-        self.b_castle_ks=True
-        self.ep_sq=None
-        self.turn=WHITE
-        self.check=False
-        self.generator=None
-        self.fmr=0
+        self.w_castle_ks=w_castle_ks
+        self.b_castle_qs=b_castle_qs
+        self.b_castle_ks=b_castle_ks
+        self.ep_sq=ep_sq
+        self.turn=turn
+        self.check=check
+        self.generator=generator
+        self.fmr=fmr
+        self.move_num=move_num
         
         self.pieces={
             xx:set(),

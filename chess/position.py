@@ -7,7 +7,7 @@ class Position(object):
     
     def __init__(self,board_vals=None,w_castle_qs=True,w_castle_ks=True,
                  b_castle_qs=True,b_castle_ks=True,ep_sq=None,
-                 turn=WHITE,check=False,generator=None,fmr=0,move_num=1):
+                 turn=WHITE,check=False,generator=None,fmr=0,move_num=0):
         if not board_vals:
             self.b=[bR,bN,bB,bQ,bK,bB,bN,bR,#00..08
                     bP,bP,bP,bP,bP,bP,bP,bP,#08..15

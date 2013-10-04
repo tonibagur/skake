@@ -117,25 +117,25 @@ class TestMoveGen(unittest.TestCase):
             for j in range(8):
                 mgsq=self.movegen.squares[self.pos.get_index_row_col(i,j)]
                 if i!=2:
-                    self.assertEqual(mgsq.pawn_advance2_white,None)
+                    self.assertLess(len(mgsq.pawn_advance_white),2)
                 else:
-                    self.assertEqual(mgsq.pawn_advance2_white.row,i+2)
-                    self.assertEqual(mgsq.pawn_advance2_white.column,j)
+                    self.assertEqual(mgsq.pawn_advance_white[1].row,i+2)
+                    self.assertEqual(mgsq.pawn_advance_white[1].column,j)
                 if i!=7:
-                    self.assertEqual(mgsq.pawn_advance2_black,None)
+                    self.assertLess(len(mgsq.pawn_advance_black),2)
                 else:
-                    self.assertEqual(mgsq.pawn_advance2_black.row,i-2)
-                    self.assertEqual(mgsq.pawn_advance2_black.column,j)
+                    self.assertEqual(mgsq.pawn_advance_black[1].row,i-2)
+                    self.assertEqual(mgsq.pawn_advance_black[1].column,j)
                 if i==7:
-                    self.assertEqual(mgsq.pawn_advance1_white,None)
+                    self.assertEqual(len(mgsq.pawn_advance_white),0)
                 else:
-                    self.assertEqual(mgsq.pawn_advance1_white.row,i+1)
-                    self.assertEqual(mgsq.pawn_advance1_white.column,j)
+                    self.assertEqual(mgsq.pawn_advance_white[0].row,i+1)
+                    self.assertEqual(mgsq.pawn_advance_white[0].column,j)
                 if i==0:
-                    self.assertEqual(mgsq.pawn_advance1_black,None)
+                    self.assertEqual(len(mgsq.pawn_advance_black),0)
                 else:
-                    self.assertEqual(mgsq.pawn_advance1_black.row,i-1)
-                    self.assertEqual(mgsq.pawn_advance1_black.column,j)
+                    self.assertEqual(mgsq.pawn_advance_black[0].row,i-1)
+                    self.assertEqual(mgsq.pawn_advance_black[0].column,j)
                     
     def test_pawn_captures(self):
         for i in range(8):
@@ -211,3 +211,24 @@ class TestMoveGen(unittest.TestCase):
                         for q in mgsq.pawn_captures_black:
                             self.assertEqual(q.row,i-1)
                             self.assertEqual(q.column,j-1)
+    
+    def test_move_sets(self):
+        move_types=['column_moves1',
+                    'column_moves2',
+                    'row_moves1',
+                    'row_moves2',
+                    'diag_moves1',
+                    'diag_moves2',
+                    'diag_moves3',
+                    'diag_moves4',
+                    'knight_moves',
+                    'king_moves',
+                    'pawn_advance_white',
+                    'pawn_advance_black',
+                    'pawn_captures_white',
+                    'pawn_captures_black',
+                    ]
+        for i in range(63):
+            sq=self.movegen.squares[i]
+            for t in move_types:
+                self.assertEqual(set(getattr(sq,t)),getattr(sq,'set_'+t))

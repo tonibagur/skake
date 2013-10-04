@@ -28,6 +28,7 @@ class Position(object):
         self.turn=WHITE
         self.check=False
         self.generator=None
+        self.fmr=0
         
         self.pieces={
             xx:set(),

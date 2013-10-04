@@ -15,14 +15,14 @@ class Test_Position_PosInicial(unittest.TestCase):
 #class Test_Position_PosInicial(dummyTest): 
     def setUp(self):
         self.pos=Position()
-        self.b=[bR,bN,bB,bQ,bK,bB,bN,bR,
-                bP,bP,bP,bP,bP,bP,bP,bP,
-                xx,xx,xx,xx,xx,xx,xx,xx,
-                xx,xx,xx,xx,xx,xx,xx,xx,
-                xx,xx,xx,xx,xx,xx,xx,xx,
-                xx,xx,xx,xx,xx,xx,xx,xx,
-                wP,wP,wP,wP,wP,wP,wP,wP,
-                wR,wN,wB,wQ,wK,wB,wN,wR
+        self.b=[bR,bN,bB,bQ,bK,bB,bN,bR, #00..07
+                bP,bP,bP,bP,bP,bP,bP,bP, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                wP,wP,wP,wP,wP,wP,wP,wP, #48..55
+                wR,wN,wB,wQ,wK,wB,wN,wR  #56..63
                ]        
     def test_initial_values(self):
 
@@ -196,4 +196,32 @@ class Test_Position_PosInicial(unittest.TestCase):
         self.assertEqual(self.pos.get_index_row_col(0,0),56)
         self.assertEqual(self.pos.get_index_row_col(0,7),63)
         self.assertEqual(self.pos.get_index_row_col(5,0),16)
+        
+    def test_piece_sets(self):
+        initial_empty=set(range(16,48))
+        self.assertEqual(self.pos.pieces[xx],initial_empty)
+        
+        self.assertEqual(self.pos.pieces[bR],set([0,7]))
+        self.assertEqual(self.pos.pieces[bN],set([1,6]))
+        self.assertEqual(self.pos.pieces[bB],set([2,5]))
+        self.assertEqual(self.pos.pieces[bQ],set([3]))
+        self.assertEqual(self.pos.pieces[bK],set([4]))
+        self.assertEqual(self.pos.pieces[bP],set(range(8,16)))
+        
+        self.assertEqual(self.pos.pieces[wR],set([56,63]))
+        self.assertEqual(self.pos.pieces[wN],set([57,62]))
+        self.assertEqual(self.pos.pieces[wB],set([58,61]))
+        self.assertEqual(self.pos.pieces[wQ],set([59]))
+        self.assertEqual(self.pos.pieces[wK],set([60]))
+        initial_wP=set(range(48,56))
+        self.assertEqual(self.pos.pieces[wP],initial_wP)
+        
+        self.pos.set_square(36,wP)
+        self.pos.set_square(52,xx)
+        self.assertEqual(self.pos.pieces[xx],(initial_empty-set([36]))|set([52]))
+        self.assertEqual(self.pos.pieces[wP],(initial_wP-set([52]))|set([36]))
+        
+        self.pos.set_square(16,bR)
+        self.assertEqual(self.pos.pieces[xx],(initial_empty-set([36])-set([16]))|set([52]))
+        self.assertEqual(self.pos.pieces[bR],set([0,7,16]))
         

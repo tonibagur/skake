@@ -34,7 +34,7 @@ class MoveGeneratorSquare(object):
         self.column=column
         
     
-class MoveGenerator(object):
+class MoveGeneratorBoard(object):
     knight_deltas=[(1,2),(2,1),(-1,2),(-2,1),(1,-2),(2,-1),(-1,-2),(-2,-1)]
     king_deltas=[(1,0),(1,1),(0,1),(-1,0),(-1,1),(0,-1),(1,-1),(-1,-1)]
     def __init__(self,pos):

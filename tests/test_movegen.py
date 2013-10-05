@@ -9,7 +9,7 @@ import unittest
 class TestMoveGen(unittest.TestCase):
     def setUp(self):
         self.pos=Position()
-        self.movegen=MoveGenerator(self.pos)
+        self.movegen=MoveGeneratorBoard(self.pos)
         
     def test_move_column(self):
         for i in range(8):

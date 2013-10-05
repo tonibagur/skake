@@ -2,16 +2,84 @@
 # -*- coding: utf-8 -*- 
 import weakref
 
+from chess.move import Move
+
 
 class MoveGenerator(object):
     
-    def generate_moves(self,board):
-        pass
+    def __init__(self):
+        self.helper=MoveGeneratorBoard()
     
+    def generate_moves(self,board):
+        moves=[]
+        if board.check:
+            raise Exception('Not implemented')
+        else:
+            moves+=self.generate_rook_moves(board)
+        return moves
+
+    def generate_moves_rook(self,board):
+        piece='wR' if board.turn=='WHITE' else 'bR'
+        rooks=board.pieces[piece]
+        moves=[]
+        for s in rooks:
+            moves+=self.generate_moves_rook_sq(board,s)
+        return moves
+
+    
+    def generate_moves_rook_sq(self,board,s):
+        moves=[]
+        next_turn=oposite(board.turn)
+        if not self.pinned_diag(board,s) and not self.pinned_row(board,s):
+            for dest in self.helper[s].row_moves1:
+                dest_val=board.squares[dest]
+                dest_color=color(dest_val)
+                if board.turn==dest_color:
+                    break
+                if next_turn==dest_color:
+                    m=self.build_move()
+        return moves
+                  
+    
+    def build_move(self,board,source_square,dest_square,piece_type,
+                   check,fmr_reset,captured_piece,ep=None):
+        w_castle_ks_chg=False
+        w_castle_qs_chg=False      
+        b_castle_ks_chg=False
+        b_castle_qs_chg=False  
+        if piece_type=='wK':
+            if board.w_castle_ks:
+                w_castle_ks_chg=True
+            if board.w_castle_qs:
+                w_castle_qs_chg=True
+        if piece_type=='bK':
+            if board.b_castle_ks:
+                b_castle_ks_chg=True
+            if board.b_castle_qs:
+                b_castle_qs_chg=True
+        '''Note: This part of the implementation is not CHESS960 friendly'''
+        if piece_type=='wR':
+            if board.w_castle_ks and source_square==63:
+                w_castle_ks_chg=True
+            if board.w_castle_qs and source_square==56:
+                w_castle_qs_chg=True
+        if piece_type=='bR':
+            if board.b_castle_ks and source_square==7:
+                b_castle_ks_chg=True
+            if board.b_castle_qs and source_square==0:
+                b_castle_qs_chg=True
+        '''End of note'''
+        return Move(source_square,dest_square,piece_type,oposite(board.turn),
+                    board.check,check,board.fmr,0 if fmr_reset else board.fmr+1,
+                    board.move_num,board.move_num if board.turn=='BLACK' else board.move_num+1,
+                    captured_piece,w_castle_ks_chg,w_castle_qs_chg,
+                    b_castle_ks_chg,b_castle_qs_chg,board.ep_sq,ep)
+                    
+                    
 
 class MoveGeneratorSquare(object):
     
-    def __init__(self,row,column):
+    def __init__(self,row,column,square):
         self.row_moves1=[]
         self.row_moves2=[]
         
@@ -39,6 +107,7 @@ class MoveGeneratorSquare(object):
         
         self.row=row
         self.column=column
+        self.square=square
         
     
 class MoveGeneratorBoard(object):
@@ -47,7 +116,7 @@ class MoveGeneratorBoard(object):
     def __init__(self,pos):
         pos.generator=self
         self.pos=weakref.ref(pos)
-        self.squares=[MoveGeneratorSquare(*self.pos().get_row_col(i)) for i in range(64)]
+        self.squares=[MoveGeneratorSquare(*self.pos().get_row_col2(i)) for i in range(64)]
         for i in range(64):
             self.generate_column_moves(i)
             self.generate_row_moves(i)

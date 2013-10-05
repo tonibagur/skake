@@ -7,7 +7,7 @@ class Position(object):
     
     def __init__(self,board_vals=None,w_castle_qs=True,w_castle_ks=True,
                  b_castle_qs=True,b_castle_ks=True,ep_sq=None,
-                 turn=WHITE,check=False,fmr=0,move_num=0):
+                 turn=WHITE,fmr=0,move_num=0):
         if not board_vals:
             self.b=[bR,bN,bB,bQ,bK,bB,bN,bR,#00..08
                     bP,bP,bP,bP,bP,bP,bP,bP,#08..15
@@ -26,7 +26,7 @@ class Position(object):
         self.b_castle_ks=b_castle_ks
         self.ep_sq=ep_sq
         self.turn=turn
-        self.check=check
+        self.check=False#TODO: Implement check deduction
         self.fmr=fmr
         self.move_num=move_num
         
@@ -74,6 +74,12 @@ class Position(object):
         row=7-square/8
         col=square%8
         return row,col
+        
+    def get_row_col2(self,square):
+        assert (0 <= square < 64)
+        row=7-square/8
+        col=square%8
+        return row,col,square
         
     def get_row_col_value(self,row,col):
         assert (0 <= row < 8) and (0 <= col < 8)

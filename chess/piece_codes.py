@@ -17,6 +17,9 @@ def color(code):
         return xx
     else:
         return 'WHITE' if 1<=code<=6 else 'BLACK'
+        
+def oposite(color):
+    return 'WHITE' if color=='BLACK' else 'BLACK'
 
 WHITE='WHITE'
 BLACK='BLACK'

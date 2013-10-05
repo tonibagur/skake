@@ -238,7 +238,7 @@ class Test_Position_PosInicial_NoDefault(Test_Position_PosInicial):
                 wP,wP,wP,wP,xx,wP,wP,wP, #48..55
                 wR,wN,wB,wQ,wK,wB,wN,wR  #56..63
                 ] 
-        self.pos=Position(self.b,True,True,True,True,None,BLACK,False,None,0,1)
+        self.pos=Position(self.b,True,True,True,True,None,BLACK,False,0,1)
     
     def test_initial_values(self):
 

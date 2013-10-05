@@ -2,6 +2,13 @@
 # -*- coding: utf-8 -*- 
 import weakref
 
+
+class MoveGenerator(object):
+    
+    def generate_moves(self,board):
+        pass
+    
+
 class MoveGeneratorSquare(object):
     
     def __init__(self,row,column):

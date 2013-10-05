@@ -13,7 +13,7 @@ class TestMove(unittest.TestCase):
         
     def test_move(self):
         #51 -> 35 = d2 -> d4
-        m1=Move(51,35,wP,WHITE,BLACK,False,False,0,0,0,1,xx,False,False,False,False,None,43)
+        m1=Move(51,35,wP,WHITE,BLACK,False,False,[],[],0,0,0,1,xx,False,False,False,False,None,43)
         m1.do(self.pos)
         self.assertEqual(self.pos.b,[bR,bN,bB,bQ,bK,bB,bN,bR,#00..08
                                      bP,bP,bP,bP,bP,bP,bP,bP,#08..15
@@ -34,7 +34,7 @@ class TestMove(unittest.TestCase):
         self.assertEqual(self.pos.fmr,0)
         self.assertEqual(self.pos.move_num,1)
         
-        m2=Move(11,27,bP,BLACK,WHITE,False,False,0,0,1,1,xx,False,False,False,False,43,18)
+        m2=Move(11,27,bP,BLACK,WHITE,False,False,[],[],0,0,1,1,xx,False,False,False,False,43,18)
         m2.do(self.pos)
         self.assertEqual(self.pos.b,[bR,bN,bB,bQ,bK,bB,bN,bR,#00..08
                                      bP,bP,bP,xx,bP,bP,bP,bP,#08..15
@@ -55,7 +55,7 @@ class TestMove(unittest.TestCase):
         self.assertEqual(self.pos.fmr,0)
         self.assertEqual(self.pos.move_num,1)
         
-        m3=Move(59,43,wQ,WHITE,BLACK,False,False,0,1,1,2,xx,False,False,False,False,18,None)
+        m3=Move(59,43,wQ,WHITE,BLACK,False,False,[],[],0,1,1,2,xx,False,False,False,False,18,None)
         m3.do(self.pos)
         self.assertEqual(self.pos.b,[bR,bN,bB,bQ,bK,bB,bN,bR,#00..08
                                      bP,bP,bP,xx,bP,bP,bP,bP,#08..15
@@ -76,7 +76,7 @@ class TestMove(unittest.TestCase):
         self.assertEqual(self.pos.fmr,1)
         self.assertEqual(self.pos.move_num,2)
         
-        m4=Move(3,19,bQ,BLACK,WHITE,False,False,1,2,2,2,xx,False,False,False,False,None,None)
+        m4=Move(3,19,bQ,BLACK,WHITE,False,False,[],[],1,2,2,2,xx,False,False,False,False,None,None)
         m4.do(self.pos)
         self.assertEqual(self.pos.b,[bR,bN,bB,xx,bK,bB,bN,bR,#00..08
                                      bP,bP,bP,xx,bP,bP,bP,bP,#08..15
@@ -97,7 +97,7 @@ class TestMove(unittest.TestCase):
         self.assertEqual(self.pos.fmr,2)
         self.assertEqual(self.pos.move_num,2)
         
-        m5=Move(60,59,wK,WHITE,BLACK,False,False,2,3,2,3,xx,True,True,True,True,None,None)
+        m5=Move(60,59,wK,WHITE,BLACK,False,False,[],[],2,3,2,3,xx,True,True,True,True,None,None)
         m5.do(self.pos)
         self.assertEqual(self.pos.b,[bR,bN,bB,xx,bK,bB,bN,bR,#00..08
                                      bP,bP,bP,xx,bP,bP,bP,bP,#08..15

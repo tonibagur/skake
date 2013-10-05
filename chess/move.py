@@ -7,7 +7,7 @@ class Move(object):
     
     def __init__(self,source_square,dest_square,piece_type,
                  last_color,next_color,
-                 last_check,next_check,
+                 last_check,next_check,last_check_moves,next_check_moves,
                  last_fmr,next_fmr,
                  last_move_num,next_move_num,captured_piece=xx,
                  w_castle_ks_chg=False,w_castle_qs_chg=False,
@@ -27,6 +27,8 @@ class Move(object):
         self.ep_sq_next=ep_sq_next
         self.last_check=last_check
         self.next_check=next_check
+        self.last_check_moves=last_check_moves
+        self.next_check_moves=next_check_moves
         self.last_fmr=last_fmr
         self.next_fmr=next_fmr
         self.last_move_num=last_move_num

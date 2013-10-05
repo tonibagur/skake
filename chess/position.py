@@ -27,6 +27,10 @@ class Position(object):
         self.ep_sq=ep_sq
         self.turn=turn
         self.check=False#TODO: Implement check deduction
+        '''TODO: Implement check deduction [('diag1',27),('column1',56)] 
+                 Escac doble: tipus diag1 desde d5 + tipus column1 desde a1
+        '''
+        self.check_moves=[]
         self.fmr=fmr
         self.move_num=move_num
         

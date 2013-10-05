@@ -6,7 +6,66 @@ from chess.position import Position
 
 import unittest
 
-class TestMoveGen(unittest.TestCase):
+from chess.piece_codes import *
+
+class TestMoveGenRook1(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,xx,bK,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,xx,xx,xx, #48..55
+                xx,xx,xx,wR,xx,xx,wK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook1(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(set([59]),set([x.source_square for x in moves]))
+        self.assertEqual(set([56,57,58,60,61,51,43,35,27,19,11,3]),set([x.dest_square for x in moves]))
+        self.assertEqual(len(moves),12)
+
+class TestMoveGenRook2(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,bK,bR,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,xx,wR,xx, #48..55
+                xx,xx,xx,xx,xx,xx,wK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook2(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),6)
+        
+class TestMoveGenRook3(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,bK,xx,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,bB,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,wR,xx,xx, #48..55
+                xx,xx,xx,xx,xx,xx,wK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook2(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),0)
+
+
+class TestMoveGenBoard(unittest.TestCase):
     def setUp(self):
         self.pos=Position()
         self.movegen=MoveGeneratorBoard(self.pos)

@@ -183,6 +183,10 @@ class MoveGenerator(object):
                 check_list=[]
                 if discovered_check[0]:
                     check_list.append((discovered_check[1],discovered_check[2]))
+                for t,r in check_generator(dest.square):
+                    check_info=self.check_ray(board,dest.square,r,t)
+                    if check_info[0]:
+                        check_list.append((check_info[1],check_info[2]))
                 check=len(check_list)>0
                 if not only_captures:
                     moves.append(self.build_move(board,s,dest.square,piece_type,check,

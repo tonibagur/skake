@@ -51,6 +51,11 @@ class TestMoveGenRook2(unittest.TestCase):
         moves=self.mg.generate_moves_rook(self.pos)
         self.assertEqual(len(moves),6)
         self.assertEqual(set([46,38,30,22,14,6]),set([x.dest_square for x in moves]))
+        for m in moves:
+            if m.dest_square==6:
+                self.assertEqual(m.captured_piece,bR)
+            else:
+                self.assertEqual(m.captured_piece,xx)
         
 class TestMoveGenRook3(unittest.TestCase):
     def setUp(self):
@@ -132,6 +137,85 @@ class TestMoveGenRook5(unittest.TestCase):
             else:
                 self.assertEqual(x.next_check,False)
         self.assertEqual(len(moves),12)
+        
+class TestMoveGenRook6(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,wK,wR,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,xx,bR,xx, #48..55
+                xx,xx,xx,xx,xx,xx,bK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,BLACK,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook6(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),6)
+        self.assertEqual(set([46,38,30,22,14,6]),set([x.dest_square for x in moves]))
+        for m in moves:
+            if m.dest_square==6:
+                self.assertEqual(m.captured_piece,wR)
+            else:
+                self.assertEqual(m.captured_piece,xx)
+                
+class TestMoveGenRook7(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,wK,xx,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,wB,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,bR,xx,xx, #48..55
+                xx,xx,xx,xx,xx,xx,bK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,BLACK,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook7(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),0)
+        
+class TestMoveGenRook8(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,xx,xx,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,wK, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,bR,xx,xx, #48..55
+                xx,xx,xx,xx,bB,xx,bK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,BLACK,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook8(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),14)
+        self.assertEqual(set([61,45,37,29,21,13,5,48,49,50,51,52,54,55]),set([x.dest_square for x in moves]))
+        self.assertEqual(set([True]),set([x.next_check for x in moves]))
+        self.assertEqual(set([1]),set([len(x.next_check_moves)]))
+        for m in moves:
+            self.assertEqual(self.pos.check,False)
+            self.assertEqual(self.pos.check_moves,[])
+            self.assertEqual(self.pos.turn,BLACK)
+            m.do(self.pos)
+            self.assertEqual(self.pos.check,True)
+            if m.dest_square not in (37,55):
+                self.assertEqual(len(self.pos.check_moves),1)
+                self.assertEqual((60,DIAG1),(self.pos.check_moves[0]))
+            else:
+                self.assertEqual(len(self.pos.check_moves),2)
+                self.assertEqual((60,DIAG1),(self.pos.check_moves[0]))
+                cm=(m.dest_square,COLUMN1 if m.dest_square==55 else ROW1)
+                self.assertEqual(cm,(self.pos.check_moves[1]))
+            self.assertEqual(self.pos.turn,WHITE)
+            m.undo(self.pos)
 
 class TestMoveGenBoard(unittest.TestCase):
     def setUp(self):

@@ -86,6 +86,14 @@ class TestMoveGenRook4(unittest.TestCase):
         self.assertEqual(set([61,45,37,29,21,13,5,48,49,50,51,52,54,55]),set([x.dest_square for x in moves]))
         self.assertEqual(set([True]),set([x.next_check for x in moves]))
         self.assertEqual(set([1]),set([len(x.next_check_moves)]))
+        for m in moves:
+            self.assertEqual(self.pos.check,False)
+            self.assertEqual(self.pos.check_moves,[])
+            m.do(self.pos)
+            self.assertEqual(self.pos.check,True)
+            self.assertEqual(len(self.pos.check_moves),1)
+            self.assertEqual((60,DIAG1),(self.pos.check_moves[0]))
+            m.undo(self.pos)
 
 class TestMoveGenBoard(unittest.TestCase):
     def setUp(self):

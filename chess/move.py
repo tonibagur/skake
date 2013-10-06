@@ -44,6 +44,7 @@ class Move(object):
         board.b_castle_ks=not self.b_castle_ks_chg and board.b_castle_ks
         board.ep_sq=self.ep_sq_next
         board.check=self.next_check
+        board.check_moves=self.next_check_moves
         board.fmr=self.next_fmr
         board.move_num=self.next_move_num
         
@@ -57,5 +58,6 @@ class Move(object):
         board.b_castle_ks=(not self.b_castle_ks_chg and board.b_castle_ks) or self.b_castle_ks_chg
         board.ep_sq=self.ep_sq_old
         board.check=self.last_check
+        board.check_moves=self.last_check_moves
         board.fmr=self.last_fmr
         board.move_num=self.last_move_num

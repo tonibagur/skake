@@ -128,15 +128,15 @@ class MoveGenerator(object):
         p2,s2 = self.first_piece_ray(board,ray2)
         if board.turn==WHITE:
             if p1==bK and p2 in w_attack:
-                return True,s2,rtype2
+                return True,s2,rtype1
             if p2==bK and p1 in w_attack:
-                return True,s1,rtype1
+                return True,s1,rtype2
             return False,None,None
         if board.turn==BLACK:
             if p1==wK and p2 in b_attack:
-                return True,s2,rtype2
+                return True,s2,rtype1
             if p2==wK and p1 in b_attack:
-                return True,s1,rtype1
+                return True,s1,rtype2
             return False,None,None
             
     def first_piece_ray(self,board,ray):

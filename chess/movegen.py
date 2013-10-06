@@ -168,7 +168,7 @@ class MoveGenerator(object):
             if board.turn==dest_color:
                 break
             elif next_turn==dest_color:
-                check_list=[]#TODO: Implement check
+                check_list=[]
                 if discovered_check[0]:
                     check_list.append((discovered_check[1],discovered_check[2]))
                 for t,r in check_generator(dest.square):
@@ -180,7 +180,7 @@ class MoveGenerator(object):
                                             check_list,True,dest_val,None))
                 break
             else:
-                check_list=[]#TODO: Implement check
+                check_list=[]
                 if discovered_check[0]:
                     check_list.append((discovered_check[1],discovered_check[2]))
                 check=len(check_list)>0

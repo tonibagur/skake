@@ -45,6 +45,7 @@ class TestMoveGenRook2(unittest.TestCase):
     def test_move_gen_rook2(self):
         moves=self.mg.generate_moves_rook(self.pos)
         self.assertEqual(len(moves),6)
+        self.assertEqual(set([46,38,30,22,14,6]),set([x.dest_square for x in moves]))
         
 class TestMoveGenRook3(unittest.TestCase):
     def setUp(self):
@@ -60,10 +61,31 @@ class TestMoveGenRook3(unittest.TestCase):
         self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
         self.mg=MoveGenerator(self.pos)
     
-    def test_move_gen_rook2(self):
+    def test_move_gen_rook3(self):
         moves=self.mg.generate_moves_rook(self.pos)
         self.assertEqual(len(moves),0)
 
+
+class TestMoveGenRook4(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,xx,xx,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,bK, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,wR,xx,xx, #48..55
+                xx,xx,xx,xx,wB,xx,wK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook4(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),14)
+        self.assertEqual(set([61,45,37,29,21,13,5,48,49,50,51,52,54,55]),set([x.dest_square for x in moves]))
+        self.assertEqual(set([True]),set([x.next_check for x in moves]))
+        self.assertEqual(set([1]),set([len(x.next_check_moves)]))
 
 class TestMoveGenBoard(unittest.TestCase):
     def setUp(self):

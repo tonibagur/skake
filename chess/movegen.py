@@ -6,6 +6,14 @@ from chess.move import Move
 
 from chess.piece_codes import *
 
+COLUMN1=0
+COLUMN2=1
+ROW1=2
+ROW2=3
+DIAG1=4
+DIAG2=5
+DIAG3=6
+DIAG4=7
 
 class MoveGenerator(object):
     
@@ -25,26 +33,46 @@ class MoveGenerator(object):
         rooks=board.pieces[piece]
         moves=[]
         for s in rooks:
-            moves+=self.generate_moves_rook_sq(board,piece,s)
+            discovered_check=self.discovered_check(board,s)
+            moves+=self.generate_moves_rook_sq(board,piece,s,discovered_check,False)
         return moves
 
+    def rays_check_rook(self,s):
+        return [(COLUMN1,self.helper.squares[s].column_moves1),
+                (COLUMN2,self.helper.squares[s].column_moves2),
+                (ROW1,self.helper.squares[s].row_moves1),
+                (ROW2,self.helper.squares[s].row_moves2)]
     
-    def generate_moves_rook_sq(self,board,piece_type,s,only_captures=False):
+    def rays_check_bishop(self,s):
+        return [(DIAG1,self.helper.squares[s].diag_moves1),
+                (DIAG2,self.helper.squares[s].diag_moves2),
+                (DIAG3,self.helper.squares[s].diag_moves3),
+                (DIAG4,self.helper.squares[s].diag_moves4)]
+    
+    def rays_check_queen(self,s):
+        return self.rays_check_rook(s) + self.rays_check_bishop(s)
+    
+    def generate_moves_rook_sq(self,board,piece_type,s,discovered_check,only_captures=False):
         moves=[]
         if not self.pinned_diag(board,s) and not self.pinned_row(board,s):
             moves+=self.generate_moves_ray(board,piece_type,s,
-                                           self.helper.squares[s].column_moves1,only_captures)
+                                           self.helper.squares[s].column_moves1,
+                                           self.rays_check_rook,
+                                           discovered_check,only_captures)
             moves+=self.generate_moves_ray(board,piece_type,s,
-                                           self.helper.squares[s].column_moves2,only_captures)
+                                           self.helper.squares[s].column_moves2,
+                                           self.rays_check_rook,
+                                           discovered_check,only_captures)
         if not self.pinned_diag(board,s) and not self.pinned_column(board,s):
             moves+=self.generate_moves_ray(board,piece_type,s,
-                                           self.helper.squares[s].row_moves1,only_captures)
+                                           self.helper.squares[s].row_moves1,
+                                           self.rays_check_rook,
+                                           discovered_check,only_captures)
             moves+=self.generate_moves_ray(board,piece_type,s,
-                                           self.helper.squares[s].row_moves2,only_captures)
+                                           self.helper.squares[s].row_moves2,
+                                           self.rays_check_rook,
+                                           discovered_check,only_captures)
         return moves
-        
-    def discovered_check(self,board,square):
-        pass
     
     def pinned_diag(self,board,square):
         return self.pinned_diag_1_4(board,square) or self.pinned_diag_2_3(board,square)
@@ -66,22 +94,72 @@ class MoveGenerator(object):
                                self.helper.squares[square].column_moves2,(wR,wQ),(bR,bQ))
     
     def pinned_ray(self,board,square,ray1,ray2,w_attack,b_attack):
-        p1 = self.first_piece_ray(board,ray1)
-        p2 = self.first_piece_ray(board,ray2)
+        p1,s1 = self.first_piece_ray(board,ray1)
+        p2,s2 = self.first_piece_ray(board,ray2)
         if board.turn==WHITE:
             return (p1==wK and p2 in b_attack) or (p2==wK and p1 in b_attack)
         else:
             return (p1==bK and p2 in w_attack) or (p2==bK and p1 in w_attack)
             
+    def discovered_check(self,board,square):
+        check,sq,rtype=self.discovered_ray(board,square,self.helper.squares[square].column_moves1,
+                                     self.helper.squares[square].column_moves2,(wR,wQ),(bR,bQ),
+                                     COLUMN1,COLUMN2)
+        if check:
+            return check,sq,rtype
+        check,sq,rtype=self.discovered_ray(board,square,self.helper.squares[square].row_moves1,
+                                     self.helper.squares[square].row_moves2,(wR,wQ),(bR,bQ),
+                                     ROW1,ROW2)
+        if check:
+            return check,sq,rtype
+        check,sq,rtype=self.discovered_ray(board,square,self.helper.squares[square].diag_moves1,
+                                     self.helper.squares[square].diag_moves4,(wB,wQ),(bB,bQ),
+                                     DIAG1,DIAG4)
+        if check:
+            return check,sq,rtype
+        check,sq,rtype=self.discovered_ray(board,square,self.helper.squares[square].diag_moves2,
+                                     self.helper.squares[square].diag_moves3,(wB,wQ),(bB,bQ),
+                                     DIAG2,DIAG3)
+        return check,sq,rtype
+
+        
+    def discovered_ray(self,board,square,ray1,ray2,w_attack,b_attack,rtype1,rtype2):
+        p1,s1 = self.first_piece_ray(board,ray1)
+        p2,s2 = self.first_piece_ray(board,ray2)
+        if board.turn==WHITE:
+            if p1==bK and p2 in w_attack:
+                return True,s2,rtype2
+            if p2==bK and p1 in w_attack:
+                return True,s1,rtype1
+            return False,None,None
+        if board.turn==BLACK:
+            if p1==wK and p2 in b_attack:
+                return True,s2,rtype2
+            if p2==wK and p1 in b_attack:
+                return True,s1,rtype1
+            return False,None,None
+            
     def first_piece_ray(self,board,ray):
         last_val=xx
+        sq_found=None
         for sq in ray:
             last_val=board.get_square(sq.square)
             if last_val!=xx:
+                sq_found=sq.square
                 break
-        return last_val
+        return last_val,sq_found
+        
+    def check_ray(self,board,s,r,type):
+        first_piece,square = self.first_piece_ray(board,r)
+        if first_piece==wK and board.turn==BLACK:
+            return (True,s,type)
+        elif first_piece==bK and board.turn==WHITE:
+            return (True,s,type)
+        else:
+            return (False,None,None)
     
-    def generate_moves_ray(self,board,piece_type,s,ray,only_captures=False):
+    def generate_moves_ray(self,board,piece_type,s,ray,check_generator,
+                           discovered_check=(False,None,None),only_captures=False):
         moves=[]
         next_turn=oposite(board.turn)
         for dest in ray:
@@ -91,12 +169,20 @@ class MoveGenerator(object):
                 break
             elif next_turn==dest_color:
                 check_list=[]#TODO: Implement check
+                if discovered_check[0]:
+                    check_list.append((discovered_check[1],discovered_check[2]))
+                for t,r in check_generator(dest.square):
+                    check_info=self.check_ray(board,dest.square,r,t)
+                    if check_info[0]:
+                        check_list.append((check_info[1],check_info[2]))
                 check=len(check_list)>0
                 moves.append(self.build_move(board,s,dest.square,piece_type,check,
                                             check_list,True,dest_val,None))
                 break
             else:
                 check_list=[]#TODO: Implement check
+                if discovered_check[0]:
+                    check_list.append((discovered_check[1],discovered_check[2]))
                 check=len(check_list)>0
                 if not only_captures:
                     moves.append(self.build_move(board,s,dest.square,piece_type,check,
@@ -105,6 +191,7 @@ class MoveGenerator(object):
     
     def build_move(self,board,source_square,dest_square,piece_type,
                    check,check_moves,fmr_reset,captured_piece,ep=None):
+        assert type(check)==bool
         w_castle_ks_chg=False
         w_castle_qs_chg=False      
         b_castle_ks_chg=False
@@ -131,14 +218,13 @@ class MoveGenerator(object):
             if board.b_castle_qs and source_square==0:
                 b_castle_qs_chg=True
         '''End of note'''
-        return Move(source_square,dest_square,piece_type,oposite(board.turn),
+        return Move(source_square,dest_square,piece_type,board.turn,oposite(board.turn),
                     board.check,check,board.check_moves,check_moves,board.fmr,
                     0 if fmr_reset else board.fmr+1,board.move_num,
-                    board.move_num if board.turn=='BLACK' else board.move_num+1,
+                    board.move_num if board.turn==BLACK else board.move_num+1,
                     captured_piece,w_castle_ks_chg,w_castle_qs_chg,
                     b_castle_ks_chg,b_castle_qs_chg,board.ep_sq,ep)
-                    
-                    
+    
 
 class MoveGeneratorSquare(object):
     

@@ -25,8 +25,9 @@ class MoveGenerator(object):
         if board.check:
             raise Exception('Not implemented')
         else:
-            moves+=self.generate_rook_moves(board)
-            moves+=self.generate_bishop_moves(board)
+            moves+=self.generate_moves_rook(board)
+            moves+=self.generate_moves_bishop(board)
+            moves+=self.generate_moves_queen(board)
         return moves
 
     def generate_moves_rook(self,board):
@@ -35,7 +36,7 @@ class MoveGenerator(object):
         moves=[]
         for s in rooks:
             discovered_check=self.discovered_check(board,s)
-            moves+=self.generate_moves_rook_sq(board,piece,s,discovered_check,False)
+            moves+=self.generate_moves_rook_sq(board,piece,s,discovered_check,self.rays_check_rook,False)
         return moves
         
     def generate_moves_bishop(self,board):
@@ -44,9 +45,19 @@ class MoveGenerator(object):
         moves=[]
         for s in bishops:
             discovered_check=self.discovered_check(board,s)
-            moves+=self.generate_moves_bishop_sq(board,piece,s,discovered_check,False)
+            moves+=self.generate_moves_bishop_sq(board,piece,s,discovered_check,self.rays_check_bishop,False)
         return moves
-
+        
+    def generate_moves_queen(self,board):
+        piece=wQ if board.turn==WHITE else bQ
+        queens=board.pieces[piece]
+        moves=[]
+        for s in queens:
+            discovered_check=self.discovered_check(board,s)
+            moves+=self.generate_moves_bishop_sq(board,piece,s,discovered_check,self.rays_check_queen,False)
+            moves+=self.generate_moves_rook_sq(board,piece,s,discovered_check,self.rays_check_queen,False)
+        return moves
+        
     def rays_check_rook(self,s):
         return [(COLUMN1,self.helper.squares[s].column_moves1),
                 (COLUMN2,self.helper.squares[s].column_moves2),
@@ -62,49 +73,49 @@ class MoveGenerator(object):
     def rays_check_queen(self,s):
         return self.rays_check_rook(s) + self.rays_check_bishop(s)
     
-    def generate_moves_rook_sq(self,board,piece_type,s,discovered_check,only_captures=False):
+    def generate_moves_rook_sq(self,board,piece_type,s,discovered_check,rays_check,only_captures=False):
         moves=[]
         if not self.pinned_diag(board,s) and not self.pinned_row(board,s):
             moves+=self.generate_moves_ray(board,piece_type,s,
                                            self.helper.squares[s].column_moves1,
-                                           self.rays_check_rook,
+                                           rays_check,
                                            discovered_check,only_captures)
             moves+=self.generate_moves_ray(board,piece_type,s,
                                            self.helper.squares[s].column_moves2,
-                                           self.rays_check_rook,
+                                           rays_check,
                                            discovered_check,only_captures)
         if not self.pinned_diag(board,s) and not self.pinned_column(board,s):
             moves+=self.generate_moves_ray(board,piece_type,s,
                                            self.helper.squares[s].row_moves1,
-                                           self.rays_check_rook,
+                                           rays_check,
                                            discovered_check,only_captures)
             moves+=self.generate_moves_ray(board,piece_type,s,
                                            self.helper.squares[s].row_moves2,
-                                           self.rays_check_rook,
+                                           rays_check,
                                            discovered_check,only_captures)
         return moves
 
-    def generate_moves_bishop_sq(self,board,piece_type,s,discovered_check,only_captures=False):
+    def generate_moves_bishop_sq(self,board,piece_type,s,discovered_check,rays_check,only_captures=False):
         moves=[]
         if not self.pinned_diag_2_3(board,s) and not self.pinned_row(board,s) \
            and not self.pinned_column(board,s):
             moves+=self.generate_moves_ray(board,piece_type,s,
                                            self.helper.squares[s].diag_moves1,
-                                           self.rays_check_bishop,
+                                           rays_check,
                                            discovered_check,only_captures)
             moves+=self.generate_moves_ray(board,piece_type,s,
                                            self.helper.squares[s].diag_moves4,
-                                           self.rays_check_bishop,
+                                           rays_check,
                                            discovered_check,only_captures)
         if not self.pinned_diag_1_4(board,s) and not self.pinned_row(board,s) \
            and not self.pinned_column(board,s):
             moves+=self.generate_moves_ray(board,piece_type,s,
                                            self.helper.squares[s].diag_moves2,
-                                           self.rays_check_bishop,
+                                           rays_check,
                                            discovered_check,only_captures)
             moves+=self.generate_moves_ray(board,piece_type,s,
                                            self.helper.squares[s].diag_moves3,
-                                           self.rays_check_bishop,
+                                           rays_check,
                                            discovered_check,only_captures)
         return moves
         

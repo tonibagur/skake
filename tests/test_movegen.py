@@ -95,7 +95,6 @@ class TestMoveGenRook4(unittest.TestCase):
         self.assertEqual(len(moves),14)
         self.assertEqual(set([61,45,37,29,21,13,5,48,49,50,51,52,54,55]),set([x.dest_square for x in moves]))
         self.assertEqual(set([True]),set([x.next_check for x in moves]))
-        self.assertEqual(set([1]),set([len(x.next_check_moves)]))
         for m in moves:
             self.assertEqual(self.pos.check,False)
             self.assertEqual(self.pos.check_moves,[])
@@ -240,7 +239,114 @@ class TestMoveGenBishop1(unittest.TestCase):
                 self.assertEqual(x.next_check,True)
             else:
                 self.assertEqual(x.next_check,False)
+            if x.dest_square==22:
+                self.assertEqual(x.captured_piece,bP)
+            else:
+                self.assertEqual(x.captured_piece,xx)
         self.assertEqual(len(moves),10)
+
+class TestMoveGenBishop2(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,bK,bR,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,bB,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,wB,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,xx,xx,xx, #48..55
+                xx,xx,xx,xx,xx,xx,wK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_bishop2(self):
+        moves=self.mg.generate_moves_bishop(self.pos)
+        self.assertEqual(len(moves),3)
+        self.assertEqual(set([53,35,26]),set([x.dest_square for x in moves]))
+        for m in moves:
+            if m.dest_square==26:
+                self.assertEqual(m.captured_piece,bB)
+            else:
+                self.assertEqual(m.captured_piece,xx)
+                
+class TestMoveGenBishop3(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,bK,xx,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,bR,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,xx,wB,xx, #48..55
+                xx,xx,xx,xx,xx,xx,wK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_bishop3(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),0)
+
+class TestMoveGenBishop4(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,xx,xx,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,wR,wB,xx,bK, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,xx,xx,xx, #48..55
+                xx,xx,xx,xx,xx,xx,wK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_bishop4(self):
+        moves=self.mg.generate_moves_bishop(self.pos)
+        self.assertEqual(len(moves),11)
+        self.assertEqual(set([23,30,55,46,28,19,10,1,44,51,58]),set([x.dest_square for x in moves]))
+        self.assertEqual(set([True]),set([x.next_check for x in moves]))
+        for m in moves:
+            self.assertEqual(self.pos.check,False)
+            self.assertEqual(self.pos.check_moves,[])
+            self.assertEqual(self.pos.turn,WHITE)
+            m.do(self.pos)
+            self.assertEqual(self.pos.check,True)
+            if m.dest_square not in (30,46):
+                self.assertEqual(len(self.pos.check_moves),1)
+                self.assertEqual((36,ROW1),(self.pos.check_moves[0]))
+            else:
+                self.assertEqual(len(self.pos.check_moves),2)
+                self.assertEqual((36,ROW1),(self.pos.check_moves[0]))
+                cm=(m.dest_square,DIAG1 if m.dest_square==46 else DIAG2)
+                self.assertEqual(cm,(self.pos.check_moves[1]))
+            self.assertEqual(self.pos.turn,BLACK)
+            m.undo(self.pos)
+
+class TestMoveGenBishop5(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,xx,wK,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,bB,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,xx,xx,xx,xx, #48..55
+                xx,xx,xx,xx,xx,xx,bK,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,BLACK,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_bishop5(self):
+        moves=self.mg.generate_moves_bishop(self.pos)
+        self.assertEqual(set([36]),set([x.source_square for x in moves]))
+        self.assertEqual(set([27,18,9,0,45,54,63,43,50,57,29,22,15]),set([x.dest_square for x in moves]))
+        for x in moves:
+            if x.dest_square in (27,15):
+                self.assertEqual(x.next_check,True)
+            else:
+                self.assertEqual(x.next_check,False)
+        self.assertEqual(len(moves),13)            
 
 class TestMoveGenBoard(unittest.TestCase):
     def setUp(self):

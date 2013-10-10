@@ -216,6 +216,85 @@ class TestMoveGenRook8(unittest.TestCase):
             self.assertEqual(self.pos.turn,WHITE)
             m.undo(self.pos)
 
+class TestMoveGenRook9(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,bK,xx,xx,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                wP,xx,xx,xx,xx,xx,xx,wP, #48..55
+                wR,xx,xx,xx,wK,xx,xx,wR  #56..63
+                ] 
+        self.pos=Position(self.b,True,True,True,True,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook9(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),5)
+        self.assertEqual(set([57,58,59,61,62]),set([x.dest_square for x in moves]))
+        self.assertEqual(set([False]),set([x.next_check for x in moves]))
+        self.assertEqual(set([0]),set([len(x.next_check_moves)]))
+        for m in moves:
+            self.assertEqual(self.pos.check,False)
+            self.assertEqual(self.pos.check_moves,[])
+            self.assertEqual(self.pos.turn,WHITE)
+            self.assertEqual(self.pos.w_castle_ks,True)
+            self.assertEqual(self.pos.w_castle_qs,True)
+            m.do(self.pos)
+            self.assertEqual(self.pos.check,False)
+            self.assertEqual(self.pos.turn,BLACK)
+            self.assertEqual(self.pos.w_castle_ks and self.pos.w_castle_qs,False)            
+            self.assertEqual(self.pos.w_castle_ks or self.pos.w_castle_qs,True)   
+            if m.source_square==56:
+                self.assertEqual(self.pos.w_castle_ks,True)
+                self.assertEqual(self.pos.w_castle_qs,False)
+            else:
+                self.assertEqual(self.pos.w_castle_qs,True)
+                self.assertEqual(self.pos.w_castle_ks,False)
+            m.undo(self.pos)
+
+class TestMoveGenRook10(unittest.TestCase):
+    def setUp(self):
+        self.b=[bR,xx,xx,xx,bK,xx,xx,bR, #00..07
+                bP,xx,xx,xx,xx,xx,xx,bP, #08..15
+                xx,xx,xx,xx,xx,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,xx,xx,xx,xx,xx,xx, #32..39
+                xx,xx,xx,xx,xx,xx,xx,xx, #40..47
+                wP,xx,xx,xx,xx,xx,xx,wP, #48..55
+                wR,xx,xx,xx,wK,xx,xx,wR  #56..63
+                ] 
+        self.pos=Position(self.b,True,True,True,True,None,BLACK,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_rook10(self):
+        moves=self.mg.generate_moves_rook(self.pos)
+        self.assertEqual(len(moves),5)
+        self.assertEqual(set([1,2,3,5,6]),set([x.dest_square for x in moves]))
+        self.assertEqual(set([False]),set([x.next_check for x in moves]))
+        self.assertEqual(set([0]),set([len(x.next_check_moves)]))
+        for m in moves:
+            self.assertEqual(self.pos.check,False)
+            self.assertEqual(self.pos.check_moves,[])
+            self.assertEqual(self.pos.turn,BLACK)
+            self.assertEqual(self.pos.b_castle_ks,True)
+            self.assertEqual(self.pos.b_castle_qs,True)
+            m.do(self.pos)
+            self.assertEqual(self.pos.check,False)
+            self.assertEqual(self.pos.turn,WHITE)
+            self.assertEqual(self.pos.b_castle_ks and self.pos.b_castle_qs,False)            
+            self.assertEqual(self.pos.b_castle_ks or self.pos.b_castle_qs,True)   
+            if m.source_square==0:
+                self.assertEqual(self.pos.b_castle_ks,True)
+                self.assertEqual(self.pos.b_castle_qs,False)
+            else:
+                self.assertEqual(self.pos.b_castle_qs,True)
+                self.assertEqual(self.pos.b_castle_ks,False)
+            m.undo(self.pos)
+
+
 class TestMoveGenBishop1(unittest.TestCase):
     def setUp(self):
         self.b=[xx,xx,xx,xx,xx,xx,bK,xx, #00..07

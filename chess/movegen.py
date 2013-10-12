@@ -28,6 +28,7 @@ class MoveGenerator(object):
             moves+=self.generate_moves_rook(board)
             moves+=self.generate_moves_bishop(board)
             moves+=self.generate_moves_queen(board)
+            moves+=self.generate_moves_knight(board)
         return moves
 
     def generate_moves_rook(self,board):

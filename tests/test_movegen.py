@@ -592,6 +592,35 @@ class TestMoveGenQueen1(unittest.TestCase):
                 self.assertEqual(x.next_check,False)
         self.assertEqual(len(moves),19)
         
+class TestMoveGenQueen2(unittest.TestCase):
+    def setUp(self):
+        self.b=[xx,xx,xx,xx,xx,xx,bK,xx, #00..07
+                xx,xx,xx,xx,xx,xx,xx,xx, #08..15
+                xx,xx,bP,xx,wP,xx,xx,xx, #16..23
+                xx,xx,xx,xx,xx,xx,xx,xx, #24..31
+                xx,xx,wB,xx,wQ,wR,xx,xx, #32..39
+                xx,xx,xx,wN,xx,xx,xx,xx, #40..47
+                xx,xx,xx,xx,wK,xx,wN,xx, #48..55
+                xx,xx,xx,xx,xx,xx,xx,xx  #56..63
+                ] 
+        self.pos=Position(self.b,False,False,False,False,None,WHITE,0,0)
+        self.mg=MoveGenerator(self.pos)
+    
+    def test_move_gen_queen2(self):
+        moves=self.mg.generate_moves_queen(self.pos)
+        self.assertEqual(set([36]),set([x.source_square for x in moves]))
+        self.assertEqual(set([18,27,35,44,45,28,29,22,15]),set([x.dest_square for x in moves]))
+        for x in moves:
+            if x.dest_square in (22,15):
+                self.assertEqual(x.next_check,True)
+            else:
+                self.assertEqual(x.next_check,False)
+            if x.dest_square in (18,):
+                self.assertEqual(x.captured_piece,bP)
+            else:
+                self.assertEqual(x.captured_piece,xx)
+        self.assertEqual(len(moves),9)
+        
 
         
 class TestMoveGenBoard(unittest.TestCase):

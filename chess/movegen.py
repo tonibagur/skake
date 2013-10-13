@@ -59,6 +59,14 @@ class MoveGenerator(object):
             moves+=self.generate_moves_rook_sq(board,piece,s,discovered_check,self.rays_check_queen,False)
         return moves
         
+    def generate_moves_knight(self,board):
+        piece=wN if board.turn==WHITE else bN
+        knights=board.pieces[piece]
+        moves=[]
+        for s in knights:
+            discovered_check=self.discovered_check(board,s)
+            moves+=self.generate_moves_knight_sq(board,piece,s,discovered_check,False)
+        return moves
     def rays_check_rook(self,s):
         return [(COLUMN1,self.helper.squares[s].column_moves1),
                 (COLUMN2,self.helper.squares[s].column_moves2),
@@ -74,7 +82,8 @@ class MoveGenerator(object):
     def rays_check_queen(self,s):
         return self.rays_check_rook(s) + self.rays_check_bishop(s)
     
-    def generate_moves_rook_sq(self,board,piece_type,s,discovered_check,rays_check,only_captures=False):
+    def generate_moves_rook_sq(self,board,piece_type,s,discovered_check,\
+                               rays_check,only_captures=False):
         moves=[]
         if not self.pinned_diag(board,s) and not self.pinned_row(board,s):
             moves+=self.generate_moves_ray(board,piece_type,s,
@@ -96,7 +105,8 @@ class MoveGenerator(object):
                                            discovered_check,only_captures)
         return moves
 
-    def generate_moves_bishop_sq(self,board,piece_type,s,discovered_check,rays_check,only_captures=False):
+    def generate_moves_bishop_sq(self,board,piece_type,s,discovered_check,rays_check,\
+                                 only_captures=False):
         moves=[]
         if not self.pinned_diag_2_3(board,s) and not self.pinned_row(board,s) \
            and not self.pinned_column(board,s):
@@ -118,6 +128,41 @@ class MoveGenerator(object):
                                            self.helper.squares[s].diag_moves3,
                                            rays_check,
                                            discovered_check,only_captures)
+        return moves
+        
+    def generate_moves_knight_sq(self,board,piece_type,s,discovered_check,\
+                                 only_captures=False):
+        moves=[]
+        next_turn=oposite(board.turn)
+        if not self.pinned_diag_1_4(board,s) and not self.pinned_diag_2_3(board,s)\
+           and not self.pinned_row(board,s)  and not self.pinned_column(board,s):
+            for dest in self.helper.squares[s].knight_moves:
+                dest_val=board.get_square(dest.square)
+                dest_color=color(dest_val)
+                if next_turn==dest_color:
+                    check_list=[]
+                    if discovered_check[0]:
+                        check_list.append((discovered_check[1],discovered_check[2]))
+                    for dest in self.helper.squares[dest.square].knight_moves:
+                        check_info=self.check_ray(board,dest.square,r,t)
+                        if check_info[0]:
+                            check_list.append((check_info[1],check_info[2]))
+                    check=len(check_list)>0
+                    moves.append(self.build_move(board,s,dest.square,piece_type,check,
+                                                check_list,True,dest_val,None))
+                    break
+                elif next_turn==xx:
+                    check_list=[]
+                    if discovered_check[0]:
+                        check_list.append((discovered_check[1],discovered_check[2]))
+                    for t,r in check_generator(dest.square):
+                        check_info=self.check_ray(board,dest.square,r,t)
+                        if check_info[0]:
+                            check_list.append((check_info[1],check_info[2]))
+                    check=len(check_list)>0
+                    if not only_captures:
+                        moves.append(self.build_move(board,s,dest.square,piece_type,check,
+                                                    check_list,False,xx,None))  
         return moves
         
     def pinned_diag(self,board,square):
@@ -331,12 +376,12 @@ class MoveGeneratorBoard(object):
         while f1<=7:
             self.squares[i].column_moves1.append(self.squares[self.pos().get_index_row_col(f1,c)])
             f1+=1
-        self.squares[i].set_column_moves1=set(self.squares[i].column_moves1)
+        self.squares[i].set_column_moves1=set([x.square for x in self.squares[i].column_moves1])
         f2=f-1
         while f2>=0:
             self.squares[i].column_moves2.append(self.squares[self.pos().get_index_row_col(f2,c)])
             f2-=1
-        self.squares[i].set_column_moves2=set(self.squares[i].column_moves2)
+        self.squares[i].set_column_moves2=set([x.square for x in self.squares[i].column_moves2])
 
     def generate_row_moves(self,i):
         f,c = self.pos().get_row_col(i)
@@ -344,12 +389,12 @@ class MoveGeneratorBoard(object):
         while c1<=7:
             self.squares[i].row_moves1.append(self.squares[self.pos().get_index_row_col(f,c1)])
             c1+=1
-        self.squares[i].set_row_moves1=set(self.squares[i].row_moves1)
+        self.squares[i].set_row_moves1=set([x.square for x in self.squares[i].row_moves1])
         c2=c-1
         while c2>=0:
             self.squares[i].row_moves2.append(self.squares[self.pos().get_index_row_col(f,c2)])
             c2-=1
-        self.squares[i].set_row_moves2=set(self.squares[i].row_moves2)
+        self.squares[i].set_row_moves2=set([x.square for x in self.squares[i].row_moves2])
 
     def generate_diag_moves(self,i):
         f,c = self.pos().get_row_col(i)
@@ -360,28 +405,28 @@ class MoveGeneratorBoard(object):
             self.squares[i].diag_moves1.append(self.squares[self.pos().get_index_row_col(f1,c1)])
             c1+=1
             f1+=1
-        self.squares[i].set_diag_moves1=set(self.squares[i].diag_moves1)
+        self.squares[i].set_diag_moves1=set([x.square for x in self.squares[i].diag_moves1])
         c1=c+1
         f1=f-1
         while c1<=7 and f1>=0:
             self.squares[i].diag_moves2.append(self.squares[self.pos().get_index_row_col(f1,c1)])
             c1+=1
             f1-=1
-        self.squares[i].set_diag_moves2=set(self.squares[i].diag_moves2)
+        self.squares[i].set_diag_moves2=set([x.square for x in self.squares[i].diag_moves2])
         c1=c-1
         f1=f+1
         while c1>=0 and f1<=7:
             self.squares[i].diag_moves3.append(self.squares[self.pos().get_index_row_col(f1,c1)])
             c1-=1
             f1+=1
-        self.squares[i].set_diag_moves3=set(self.squares[i].diag_moves3)
+        self.squares[i].set_diag_moves3=set([x.square for x in self.squares[i].diag_moves3])
         c1=c-1
         f1=f-1
         while c1>=0 and f1>=0:
             self.squares[i].diag_moves4.append(self.squares[self.pos().get_index_row_col(f1,c1)])
             c1-=1
             f1-=1
-        self.squares[i].set_diag_moves4=set(self.squares[i].diag_moves4)
+        self.squares[i].set_diag_moves4=set([x.square for x in self.squares[i].diag_moves4])
     def generate_knight_moves(self,i):
         f,c = self.pos().get_row_col(i)
         
@@ -390,7 +435,7 @@ class MoveGeneratorBoard(object):
             c2=c+d[1]
             if 0<=f2<=7 and 0<=c2<=7:
                 self.squares[i].knight_moves.append(self.squares[self.pos().get_index_row_col(f2,c2)])
-            self.squares[i].set_knight_moves=set(self.squares[i].knight_moves)
+            self.squares[i].set_knight_moves=set([x.square for x in self.squares[i].knight_moves])
                 
     def generate_king_moves(self,i):
         f,c = self.pos().get_row_col(i)
@@ -400,7 +445,7 @@ class MoveGeneratorBoard(object):
             c2=c+d[1]
             if 0<=f2<=7 and 0<=c2<=7:
                 self.squares[i].king_moves.append(self.squares[self.pos().get_index_row_col(f2,c2)])
-        self.squares[i].set_king_moves=set(self.squares[i].king_moves)
+        self.squares[i].set_king_moves=set([x.square for x in self.squares[i].king_moves])
 
     def generate_pawn_advances(self,i):
         f,c = self.pos().get_row_col(i)
@@ -408,12 +453,12 @@ class MoveGeneratorBoard(object):
             self.squares[i].pawn_advance_white.append(self.squares[self.pos().get_index_row_col(f+1,c)])
         if f==2:
             self.squares[i].pawn_advance_white.append(self.squares[self.pos().get_index_row_col(f+2,c)])
-        self.squares[i].set_pawn_advance_white=set(self.squares[i].pawn_advance_white)
+        self.squares[i].set_pawn_advance_white=set([x.square for x in self.squares[i].pawn_advance_white])
         if f>0:    
             self.squares[i].pawn_advance_black.append(self.squares[self.pos().get_index_row_col(f-1,c)])
         if f==7:
             self.squares[i].pawn_advance_black.append(self.squares[self.pos().get_index_row_col(f-2,c)])
-        self.squares[i].set_pawn_advance_black=set(self.squares[i].pawn_advance_black)
+        self.squares[i].set_pawn_advance_black=set([x.square for x in self.squares[i].pawn_advance_black])
     
     def generate_pawn_captures(self,i):
         f,c = self.pos().get_row_col(i) 
@@ -426,7 +471,7 @@ class MoveGeneratorBoard(object):
         c1=c+1
         if 0<=f1<=7 and 0<=c1<=7:
             self.squares[i].pawn_captures_white.append(self.squares[self.pos().get_index_row_col(f1,c1)])
-        self.squares[i].set_pawn_captures_white=set(self.squares[i].pawn_captures_white)
+        self.squares[i].set_pawn_captures_white=set([x.square for x in self.squares[i].pawn_captures_white])
         f1=f-1
         c1=c-1
         if 0<=f1<=7 and 0<=c1<=7:
@@ -435,4 +480,4 @@ class MoveGeneratorBoard(object):
         c1=c+1
         if 0<=f1<=7 and 0<=c1<=7:
             self.squares[i].pawn_captures_black.append(self.squares[self.pos().get_index_row_col(f1,c1)])   
-        self.squares[i].set_pawn_captures_black=set(self.squares[i].pawn_captures_black)
+        self.squares[i].set_pawn_captures_black=set([x.square for x in self.squares[i].pawn_captures_black])

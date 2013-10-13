@@ -850,4 +850,5 @@ class TestMoveGenBoard(unittest.TestCase):
         for i in range(63):
             sq=self.movegen.squares[i]
             for t in move_types:
-                self.assertEqual(set(getattr(sq,t)),getattr(sq,'set_'+t))
+                print t
+                self.assertEqual(set([x.square for x in getattr(sq,t)]),getattr(sq,'set_'+t))
